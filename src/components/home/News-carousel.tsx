@@ -52,54 +52,55 @@ export default function NewsCarousel() {
   }
 
   return (
-    <div className="w-full bg-gray-50 text-gray-900 py-8">
-  <div className="container mx-auto px-4">
-    <div className="flex justify-between items-center mb-6">
-      <h2 className="text-2xl font-bold text-center w-full">TIN TỨC</h2>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full border-red-600 text-red-600 hover:bg-red-100 hover:text-red-700"
-          onClick={handlePrevious}
-          disabled={startIndex === 0}
-        >
-          <ChevronLeft className="h-6 w-6" />
-          <span className="sr-only">Previous</span>
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full border-red-600 text-red-600 hover:bg-red-100 hover:text-red-700"
-          onClick={handleNext}
-          disabled={startIndex >= maxStartIndex}
-        >
-          <ChevronRight className="h-6 w-6" />
-          <span className="sr-only">Next</span>
-        </Button>
+    <div className="w-full text-white py-10">
+      <div className="w-full h-1 bg-red-600 mb-8" />
+      <div className="container mx-auto px-4 md:px-8 lg:px-16">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+          <h2 className="text-2xl font-bold text-center md:text-left w-full md:w-auto">TIN TỨC</h2>
+          <div className="flex gap-2 justify-center md:justify-end w-full md:w-auto">
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full border-red-600 text-red-600 hover:bg-red-100 hover:text-red-700"
+              onClick={handlePrevious}
+              disabled={startIndex === 0}
+            >
+              <ChevronLeft className="h-6 w-6" />
+              <span className="sr-only">Previous</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="rounded-full border-red-600 text-red-600 hover:bg-red-100 hover:text-red-700"
+              onClick={handleNext}
+              disabled={startIndex >= maxStartIndex}
+            >
+              <ChevronRight className="h-6 w-6" />
+              <span className="sr-only">Next</span>
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {newsItems.slice(startIndex, startIndex + itemsToShow).map((item) => (
+            <Card
+              key={item.id}
+              className="bg-white border border-gray-300 overflow-hidden flex flex-col shadow-md h-full"
+            >
+              <div className="aspect-video relative">
+                <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
+              </div>
+              <CardContent className="p-4 flex-grow">
+                <h3 className="text-lg font-bold text-red-600 mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-700">{item.description}</p>
+              </CardContent>
+              <CardFooter className="p-4 pt-0">
+                <Button className="bg-red-600 hover:bg-red-700 text-white w-full h-10">Đọc thêm</Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
-
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      {newsItems.slice(startIndex, startIndex + itemsToShow).map((item) => (
-        <Card
-          key={item.id}
-          className="bg-white border border-gray-300 overflow-hidden flex flex-col shadow-md"
-        >
-          <div className="aspect-video relative">
-            <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
-          </div>
-          <CardContent className="p-4 flex-grow">
-            <h3 className="text-lg font-bold text-red-600 mb-2">{item.title}</h3>
-            <p className="text-sm text-gray-700">{item.description}</p>
-          </CardContent>
-          <CardFooter className="p-4 pt-0">
-            <Button className="bg-red-600 hover:bg-red-700 text-white w-full h-10">Đọc thêm</Button>
-          </CardFooter>
-        </Card>
-      ))}
-    </div>
-  </div>
-</div>
   )
 }
