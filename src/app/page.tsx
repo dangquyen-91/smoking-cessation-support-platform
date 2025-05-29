@@ -79,53 +79,52 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">Công Cụ Hỗ Trợ Cai Thuốc</h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
+              <Card className="hover:shadow-lg transition-shadow">                <CardHeader className="text-center pb-4">
                   <Calculator className="h-12 w-12 text-blue-500 mx-auto mb-4" />
-                  <CardTitle>Đánh Giá Nghiện</CardTitle>
-                  <CardDescription>Kiểm tra mức độ nghiện thuốc lá của bạn</CardDescription>
+                  <CardTitle className="mb-2">Đánh Giá Nghiện</CardTitle>
+                  <CardDescription className="min-h-[40px]">Kiểm tra mức độ nghiện thuốc lá của bạn</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button asChild className="w-full">
+                  <Button asChild className="w-full py-5 text-base">
                     <Link href="/assessment">Bắt Đầu Đánh Giá</Link>
                   </Button>
                 </CardContent>
               </Card>
 
               <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
+                <CardHeader className="text-center pb-4">
                   <TrendingDown className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                  <CardTitle>Tính Chi Phí</CardTitle>
-                  <CardDescription>Tính toán chi phí tiêu thụ thuốc lá</CardDescription>
+                  <CardTitle className="mb-2">Tính Chi Phí</CardTitle>
+                  <CardDescription className="min-h-[40px]">Tính toán chi phí tiêu thụ thuốc lá</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button asChild className="w-full">
+                  <Button asChild className="w-full py-5 text-base">
                     <Link href="/cost-calculator">Tính Chi Phí</Link>
                   </Button>
                 </CardContent>
               </Card>
 
               <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
+                <CardHeader className="text-center pb-4">
                   <FileText className="h-12 w-12 text-purple-500 mx-auto mb-4" />
-                  <CardTitle>Tài Liệu</CardTitle>
-                  <CardDescription>Hướng dẫn và bài viết cai thuốc</CardDescription>
+                  <CardTitle className="mb-2">Tài Liệu</CardTitle>
+                  <CardDescription className="min-h-[40px]">Hướng dẫn và bài viết cai thuốc</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button asChild className="w-full">
+                  <Button asChild className="w-full py-5 text-base">
                     <Link href="/resources">Xem Tài Liệu</Link>
                   </Button>
                 </CardContent>
               </Card>
 
               <Card className="hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
+                <CardHeader className="text-center pb-4">
                   <Users className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-                  <CardTitle>Cộng Đồng</CardTitle>
-                  <CardDescription>Blog và forum hỗ trợ cộng đồng</CardDescription>
+                  <CardTitle className="mb-2">Cộng Đồng</CardTitle>
+                  <CardDescription className="min-h-[40px]">Blog và forum hỗ trợ cộng đồng</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button asChild className="w-full">
+                  <Button asChild className="w-full py-5 text-base">
                     <Link href="/community">Tham Gia</Link>
                   </Button>
                 </CardContent>
