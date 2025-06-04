@@ -4,6 +4,7 @@ import type React from "react";
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,6 +21,7 @@ import { Eye, EyeOff, Mail, Lock, ArrowRight } from "lucide-react";
 import { FaGoogle } from "react-icons/fa";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loginMethod, setLoginMethod] = useState<"email" | "phone">("email");
   const [formData, setFormData] = useState({
@@ -28,10 +30,39 @@ export default function LoginPage() {
     rememberMe: false,
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Login attempt:", formData);
+    setError("");    try {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          [loginMethod]: formData.emailOrPhone,
+          password: formData.password,
+        }),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Email/SĐT hoặc mật khẩu không đúng");
+      }
+
+      // Lưu token vào localStorage
+      if (data.token) {
+        localStorage.setItem("accessToken", data.token);
+      }
+
+      // Chuyển hướng sau khi đăng nhập thành công
+      router.push("/dashboard");
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Đã xảy ra lỗi. Vui lòng thử lại.");
+    }
   };
 
   return (
@@ -49,11 +80,15 @@ export default function LoginPage() {
             <CardHeader>
               <CardTitle>Đăng nhập tài khoản</CardTitle>
               <CardDescription>
-                Nhập thông tin đăng nhập để truy cập vào tài khoản của bạn
-              </CardDescription>
+                Nhập thông tin đăng nhập để truy cập vào tài khoản của bạn              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="p-3 rounded bg-red-50 text-red-600 text-sm">
+                    {error}
+                  </div>
+                )}
                 {/* Login Method Toggle */}
                 <div className="flex rounded-lg border p-1">
                   <button
