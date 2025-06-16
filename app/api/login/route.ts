@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Đăng nhập
+// Đăng nhập tài khoản mẫu FE (không gọi backend)
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
@@ -17,8 +17,16 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    // TODO: Thay thế bằng truy vấn DB thực tế
-    if (email !== 'test@example.com' || password !== '123456') {
+    // Kiểm tra tài khoản mẫu FE
+    if (email === 'test@example.com' && password === '123456') {
+      const user = { id: 1, email, name: 'Test User' };
+      const token = 'fake-jwt-token';
+      return NextResponse.json({
+        message: 'Đăng nhập thành công',
+        user,
+        token,
+      });
+    } else {
       return NextResponse.json(
         {
           message: 'Email hoặc mật khẩu không đúng',
@@ -27,14 +35,6 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
-    // Giả lập user và token
-    const user = { id: 1, email, name: 'Test User' };
-    const token = 'fake-jwt-token';
-    return NextResponse.json({
-      message: 'Đăng nhập thành công',
-      user,
-      token,
-    });
   } catch (error) {
     return NextResponse.json(
       { message: 'Lỗi máy chủ', errors: { api: 'Lỗi máy chủ' } },

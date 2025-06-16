@@ -19,10 +19,12 @@ interface RegisterFormProps {
 export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormProps) {
   const router = useRouter()
   const [formData, setFormData] = useState({
+    fullName: "",
     email: "",
+    phone: "",
+    age: "",
     password: "",
     confirmPassword: "",
-    fullName: "",
     agreeTerms: false,
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -38,6 +40,21 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
     setIsLoading(true)
     setErrors({})
 
+    // Validate các trường ở FE trước khi gửi lên BE
+    const newErrors: Record<string, string> = {};
+    if (!formData.fullName) newErrors.fullName = "Vui lòng nhập họ tên";
+    if (!formData.email) newErrors.email = "Vui lòng nhập email";
+    if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
+    if (!formData.age) newErrors.age = "Vui lòng nhập tuổi";
+    if (!formData.password) newErrors.password = "Vui lòng nhập mật khẩu";
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+    if (!formData.agreeTerms) newErrors.agreeTerms = "Bạn phải đồng ý với điều khoản sử dụng";
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("http://localhost:8080/api/register", {
         method: "POST",
@@ -48,6 +65,9 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
           email: formData.email,
           password: formData.password,
           fullName: formData.fullName,
+          phone: formData.phone,
+          age: formData.age,
+          // Gửi thêm các trường khác nếu BE yêu cầu
         }),
       })
 
@@ -105,6 +125,56 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
               )}
             </div>
             <div className="relative">
+              <Label htmlFor="fullName">Họ tên</Label>
+              <Input
+                id="fullName"
+                type="text"
+                placeholder="Họ và tên"
+                value={formData.fullName}
+                onChange={(e) => handleInputChange("fullName", e.target.value)}
+                className={errors.fullName ? "border-red-500" : ""}
+              />
+              {errors.fullName && (
+                <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.fullName}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <Label htmlFor="phone">Số điện thoại</Label>
+              <Input
+                id="phone"
+                placeholder="0123456789"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+                className={errors.phone ? "border-red-500" : ""}
+              />
+              {errors.phone && (
+                <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.phone}
+                </p>
+              )}
+            </div>
+            <div className="relative">
+              <Label htmlFor="age">Tuổi</Label>
+              <Input
+                id="age"
+                type="number"
+                placeholder="25"
+                value={formData.age}
+                onChange={(e) => handleInputChange("age", e.target.value)}
+                className={errors.age ? "border-red-500" : ""}
+              />
+              {errors.age && (
+                <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
+                  <AlertCircle className="h-3 w-3" />
+                  {errors.age}
+                </p>
+              )}
+            </div>
+            <div className="relative">
               <Label htmlFor="password">Mật khẩu</Label>
               <Input
                 id="password"
@@ -155,23 +225,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
                 <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
                   {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-            <div className="relative">
-              <Label htmlFor="fullName">Họ tên</Label>
-              <Input
-                id="fullName"
-                type="text"
-                placeholder="Họ và tên"
-                value={formData.fullName}
-                onChange={(e) => handleInputChange("fullName", e.target.value)}
-                className={errors.fullName ? "border-red-500" : ""}
-              />
-              {errors.fullName && (
-                <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" />
-                  {errors.fullName}
                 </p>
               )}
             </div>
