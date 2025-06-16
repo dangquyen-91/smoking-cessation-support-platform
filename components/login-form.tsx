@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { AlertCircle, Eye, EyeOff, ArrowLeft, Heart } from "lucide-react"
 import { useState } from "react"
 import { SocialAuth } from "./social-auth"
+import { useRouter } from "next/navigation"
 
 interface LoginFormProps {
   onBack: () => void
@@ -16,6 +17,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onBack, onSuccess, onSwitchMode, onForgotPassword }: LoginFormProps) {
+  const router = useRouter()
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -26,51 +28,52 @@ export function LoginForm({ onBack, onSuccess, onSwitchMode, onForgotPassword }:
   }
 
   const handleLogin = async () => {
-  setIsLoading(true)
-  setErrors({})
+    setIsLoading(true)
+    setErrors({})
 
-  if (!formData.email) {
-    setErrors({ email: "Vui lòng nhập email" })
-    setIsLoading(false)
-    return
-  }
-  if (!formData.password) {
-    setErrors({ password: "Vui lòng nhập mật khẩu" })
-    setIsLoading(false)
-    return
-  }
-
-  try {
-    const res = await fetch("http://localhost:8080/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: formData.email,
-        password: formData.password,
-      }),
-    })
-
-    const data = await res.json()
-
-    if (!res.ok) {
-      setErrors(data.errors || { api: data.message || "Đăng nhập thất bại" })
+    if (!formData.email) {
+      setErrors({ email: "Vui lòng nhập email" })
+      setIsLoading(false)
+      return
+    }
+    if (!formData.password) {
+      setErrors({ password: "Vui lòng nhập mật khẩu" })
       setIsLoading(false)
       return
     }
 
-    // Lưu token + user
-    localStorage.setItem("authToken", data.token)
-    localStorage.setItem("userData", JSON.stringify(data.user))
+    try {
+      const res = await fetch("http://localhost:8080/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
 
-    setIsLoading(false)
-    onSuccess(data.user)
-  } catch (error) {
-    setErrors({ api: "Lỗi kết nối máy chủ" })
-    setIsLoading(false)
+      const data = await res.json()
+
+      if (!res.ok) {
+        setErrors(data.errors || { api: data.message || "Đăng nhập thất bại" })
+        setIsLoading(false)
+        return
+      }
+
+      // Lưu token + user
+      localStorage.setItem("authToken", data.token)
+      localStorage.setItem("userData", JSON.stringify(data.user))
+
+      setIsLoading(false)
+      onSuccess(data.user)
+      router.push("/dashboard")
+    } catch (error) {
+      setErrors({ api: "Lỗi kết nối máy chủ" })
+      setIsLoading(false)
+    }
   }
-}
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
