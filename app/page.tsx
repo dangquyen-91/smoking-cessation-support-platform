@@ -1,112 +1,45 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { HomePage } from "@/components/home-page"
-import { AddictionAssessment } from "@/components/addiction-assessment"
-import { CostCalculator } from "@/components/cost-calculator"
-import { GuestForum } from "@/components/guest-forum"
-import { Guides } from "@/components/guides"
-import { AuthForms } from "@/components/auth-forms"
-import { ForgotPassword } from "@/components/forgot-password"
-import { DashboardApp } from "@/components/dashboard/dashboard-app"
-
-type ViewType = "landing" | "assessment" | "cost-calculator" | "resources" | "community" | "login" | "register" | "forgot-password" | "app"
-
-interface UserData {
-  email?: string
-  name?: string
-  [key: string]: any
-}
 
 export default function Home() {
-  const [currentView, setCurrentView] = useState<ViewType>("landing")
+  const router = useRouter()
+  const [isChecking, setIsChecking] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(() => {
+    // Kiểm tra token đăng nhập
     const token = localStorage.getItem("authToken")
-    const userData = localStorage.getItem("userData")
-
-    if (token && userData) {
+    if (token) {
       setIsLoggedIn(true)
-      setCurrentView("app")
+      router.replace("/dashboard") // Điều hướng nâng cao: dùng replace để không cho back về landing nếu đã login
+    } else {
+      setIsLoggedIn(false)
     }
-  }, [])
+    setIsChecking(false)
+  }, [router])
 
-  const handleLogin = (userData?: UserData) => {
-    const token = "auth_" + Date.now()
-    localStorage.setItem("authToken", token)
-    if (userData) {
-      localStorage.setItem("userData", JSON.stringify(userData))
-    }
-    setIsLoggedIn(true)
-    setCurrentView("app")
-  }
-
+  // Hàm logout nâng cao
   const handleLogout = () => {
     localStorage.removeItem("authToken")
     localStorage.removeItem("userData")
     setIsLoggedIn(false)
-    setCurrentView("landing")
+    router.push("/")
   }
 
-  const handleToolToRegister = (toolData?: UserData) => {
-    if (toolData) {
-      localStorage.setItem("toolResults", JSON.stringify(toolData))
-    }
-    setCurrentView("register")
-  }
+  if (isChecking) return null // Đợi kiểm tra xong mới render
 
+  // Nếu chưa đăng nhập, hiển thị landing với các nút điều hướng
   return (
-    <>
-      {currentView === "landing" && (
-        <HomePage
-          onAssessment={() => setCurrentView("assessment")}
-          onCostCalculator={() => setCurrentView("cost-calculator")}
-          onResources={() => setCurrentView("resources")}
-          onCommunity={() => setCurrentView("community")}
-          onRegister={() => setCurrentView("register")}
-          onLogin={() => setCurrentView("login")}
-        />
-      )}
-
-      {currentView === "assessment" && (
-        <AddictionAssessment onBack={() => setCurrentView("landing")} onRegister={handleToolToRegister} />
-      )}
-
-      {currentView === "cost-calculator" && (
-        <CostCalculator onBack={() => setCurrentView("landing")} onRegister={handleToolToRegister} />
-      )}
-
-      {currentView === "resources" && (
-        <Guides onBack={() => setCurrentView("landing")} onRegister={() => setCurrentView("register")} />
-      )}
-
-      {currentView === "community" && (
-        <GuestForum onBack={() => setCurrentView("landing")} onRegister={() => setCurrentView("register")} />
-      )}
-
-      {currentView === "login" && (
-        <AuthForms
-          mode="login"
-          onBack={() => setCurrentView("landing")}
-          onSuccess={handleLogin}
-          onSwitchMode={() => setCurrentView("register")}
-          onForgotPassword={() => setCurrentView("forgot-password")}
-        />
-      )}
-
-      {currentView === "register" && (
-        <AuthForms
-          mode="register"
-          onBack={() => setCurrentView("landing")}
-          onSuccess={handleLogin}
-          onSwitchMode={() => setCurrentView("login")}
-        />
-      )}
-
-      {currentView === "forgot-password" && <ForgotPassword onBack={() => setCurrentView("login")} />}
-
-      {currentView === "app" && <DashboardApp onLogout={handleLogout} />}
-    </>
+    <HomePage
+      onAssessment={() => router.push("/assessment")}
+      onCostCalculator={() => router.push("/cost-calculator")}
+      onResources={() => router.push("/resources")}
+      onCommunity={() => router.push("/community")}
+      onRegister={() => router.push("/register")}
+      onLogin={() => router.push("/login")}
+    />
   )
 }
