@@ -22,7 +22,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
     fullName: "",
     email: "",
     phone: "",
-    age: "",
     password: "",
     confirmPassword: "",
     agreeTerms: false,
@@ -45,7 +44,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
     if (!formData.fullName) newErrors.fullName = "Vui lòng nhập họ tên";
     if (!formData.email) newErrors.email = "Vui lòng nhập email";
     if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
-    if (!formData.age) newErrors.age = "Vui lòng nhập tuổi";
     if (!formData.password) newErrors.password = "Vui lòng nhập mật khẩu";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
     if (!formData.agreeTerms) newErrors.agreeTerms = "Bạn phải đồng ý với điều khoản sử dụng";
@@ -66,7 +64,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
           password: formData.password,
           fullName: formData.fullName,
           phone: formData.phone,
-          age: formData.age,
           // Gửi thêm các trường khác nếu BE yêu cầu
         }),
       })
@@ -157,7 +154,7 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
                 </p>
               )}
             </div>
-            <div className="relative">
+            {/* <div className="relative">
               <Label htmlFor="age">Tuổi</Label>
               <Input
                 id="age"
@@ -173,7 +170,7 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
                   {errors.age}
                 </p>
               )}
-            </div>
+            </div> */}
             <div className="relative">
               <Label htmlFor="password">Mật khẩu</Label>
               <Input

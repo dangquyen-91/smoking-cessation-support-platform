@@ -108,7 +108,7 @@ export function Progress() {
               <TrendingUp className="h-5 w-5 text-blue-600" />
               Tiến trình hàng ngày
             </CardTitle>
-            <CardDescription>Số điếu thuốc và tâm trạng theo ngày</CardDescription>
+            <CardDescription>Số điếu thuốc theo ngày</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -118,7 +118,6 @@ export function Progress() {
                 <YAxis />
                 <Tooltip />
                 <Line type="monotone" dataKey="cigarettes" stroke="#ef4444" strokeWidth={2} name="Số điếu thuốc" />
-                <Line type="monotone" dataKey="mood" stroke="#22c55e" strokeWidth={2} name="Tâm trạng (1-10)" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -141,7 +140,6 @@ export function Progress() {
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="saved" fill="#3b82f6" name="Tiền tiết kiệm (VNĐ)" />
-                <Bar dataKey="health" fill="#22c55e" name="Sức khỏe (%)" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

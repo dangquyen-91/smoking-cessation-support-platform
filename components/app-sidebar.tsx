@@ -83,11 +83,7 @@ const supportItems = [
     icon: Video,
     key: "coach-chat",
   },
-  {
-    title: "Gói dịch vụ",
-    icon: Package,
-    key: "service-packages",
-  },
+
 ]
 
 export function AppSidebar({ activeTab, setActiveTab, onLogout }: AppSidebarProps) {

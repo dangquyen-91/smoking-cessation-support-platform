@@ -12,7 +12,7 @@ import { Community } from "@/components/community"
 import { Blog } from "@/components/blog"
 import { Forum } from "@/components/forum"
 import { CoachChat } from "@/components/coach-chat"
-import { ServicePackages } from "@/components/service-packages"
+
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 
@@ -43,8 +43,6 @@ export function DashboardApp({ onLogout }: DashboardAppProps) {
         return <Forum />
       case "coach-chat":
         return <CoachChat />
-      case "service-packages":
-        return <ServicePackages />
       default:
         return <Dashboard />
     }

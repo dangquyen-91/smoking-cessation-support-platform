@@ -43,7 +43,7 @@ export function LoginForm({ onBack, onSuccess, onSwitchMode, onForgotPassword }:
     }
 
     try {
-      const res = await fetch("http://localhost:8080/api/login", {
+      const res = await fetch(`${process.env.API_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
