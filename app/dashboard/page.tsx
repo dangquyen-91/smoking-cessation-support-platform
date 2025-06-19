@@ -6,16 +6,20 @@ import { useEffect, useState } from "react"
 
 export default function Dashboard() {
   const router = useRouter()
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken")
-    if (!token) {
-      router.push("/login")
-    } else {
-      setIsLoggedIn(true)
-    }
-  }, [router])
+
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
+
+  // const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  // useEffect(() => {
+  //   const token = localStorage.getItem("authToken")
+  //   if (!token) {
+  //     router.push("/login")
+  //   } else {
+  //     setIsLoggedIn(true)
+  //   }
+  // }, [router])
 
   const handleLogout = () => {
     localStorage.removeItem("authToken")
