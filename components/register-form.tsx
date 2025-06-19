@@ -225,7 +225,7 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
                 </p>
               )}
             </div>
-            <div className="flex items-center space-x-2">
+            {/* <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
                 checked={formData.agreeTerms}
@@ -234,7 +234,7 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
               <Label htmlFor="terms" className="text-sm">
                 Tôi đồng ý với <a href="#" className="underline">điều khoản sử dụng</a>
               </Label>
-            </div>
+            </div> */}
             {errors.agreeTerms && (
               <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
                 <AlertCircle className="h-3 w-3" />
