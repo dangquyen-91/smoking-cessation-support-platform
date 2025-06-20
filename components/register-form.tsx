@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
 import { AlertCircle, Eye, EyeOff, ArrowLeft, Heart } from "lucide-react"
 import { useState } from "react"
 import { SocialAuth } from "./social-auth"
@@ -24,7 +23,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
     phone: "",
     password: "",
     confirmPassword: "",
-    agreeTerms: false,
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -46,7 +44,7 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
     if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
     if (!formData.password) newErrors.password = "Vui lòng nhập mật khẩu";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
-    if (!formData.agreeTerms) newErrors.agreeTerms = "Bạn phải đồng ý với điều khoản sử dụng";
+    // if (!formData.agreeTerms) newErrors.agreeTerms = "Bạn phải đồng ý với điều khoản sử dụng";
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setIsLoading(false);
@@ -154,23 +152,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
                 </p>
               )}
             </div>
-            {/* <div className="relative">
-              <Label htmlFor="age">Tuổi</Label>
-              <Input
-                id="age"
-                type="number"
-                placeholder="25"
-                value={formData.age}
-                onChange={(e) => handleInputChange("age", e.target.value)}
-                className={errors.age ? "border-red-500" : ""}
-              />
-              {errors.age && (
-                <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
-                  <AlertCircle className="h-3 w-3" />
-                  {errors.age}
-                </p>
-              )}
-            </div> */}
             <div className="relative">
               <Label htmlFor="password">Mật khẩu</Label>
               <Input
@@ -225,22 +206,6 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
                 </p>
               )}
             </div>
-            {/* <div className="flex items-center space-x-2">
-              <Checkbox
-                id="terms"
-                checked={formData.agreeTerms}
-                onCheckedChange={(checked) => handleInputChange("agreeTerms", !!checked)}
-              />
-              <Label htmlFor="terms" className="text-sm">
-                Tôi đồng ý với <a href="#" className="underline">điều khoản sử dụng</a>
-              </Label>
-            </div> */}
-            {errors.agreeTerms && (
-              <p className="text-sm text-red-500 mt-1 flex items-center gap-1">
-                <AlertCircle className="h-3 w-3" />
-                {errors.agreeTerms}
-              </p>
-            )}
             <Button className="w-full" onClick={handleRegister} disabled={isLoading}>
               {isLoading ? (
                 <>
