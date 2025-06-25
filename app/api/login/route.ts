@@ -1,4 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+const prisma = new PrismaClient();
+const JWT_SECRET = 'your_jwt_secret';
 
 // Đăng nhập tài khoản mẫu FE (không gọi backend)
 export async function POST(request: NextRequest) {
@@ -17,16 +23,10 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    // Kiểm tra tài khoản mẫu FE
-    if (email === 'test@example.com' && password === '123456') {
-      const user = { id: 1, email, name: 'Test User' };
-      const token = 'fake-jwt-token';
-      return NextResponse.json({
-        message: 'Đăng nhập thành công',
-        user,
-        token,
-      });
-    } else {
+
+    // Tìm user trong DB
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
       return NextResponse.json(
         {
           message: 'Email hoặc mật khẩu không đúng',
@@ -35,6 +35,28 @@ export async function POST(request: NextRequest) {
         { status: 401 }
       );
     }
+
+    // So sánh password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return NextResponse.json(
+        {
+          message: 'Email hoặc mật khẩu không đúng',
+          errors: { api: 'Email hoặc mật khẩu không đúng' },
+        },
+        { status: 401 }
+      );
+    }
+
+    // Tạo JWT token
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+    // Ẩn password khi trả về user
+    const { password: _, ...userData } = user;
+    return NextResponse.json({
+      message: 'Đăng nhập thành công',
+      user: userData,
+      token,
+    });
   } catch (error) {
     return NextResponse.json(
       { message: 'Lỗi máy chủ', errors: { api: 'Lỗi máy chủ' } },
