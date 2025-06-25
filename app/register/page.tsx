@@ -1,6 +1,7 @@
 "use client"
 
-import { AuthForms } from "@/components/auth-forms"
+// import { AuthForms } from "@/components/auth-forms"
+import { AuthForms } from "@/components/v1/auth/register"
 import { useRouter } from "next/navigation"
 
 export default function Register() {
