@@ -28,52 +28,59 @@ export function LoginForm({ onBack, onSuccess, onSwitchMode, onForgotPassword }:
   }
 
   const handleLogin = async () => {
-    setIsLoading(true)
-    setErrors({})
+  setIsLoading(true)
+  setErrors({})
 
-    if (!formData.email) {
-      setErrors({ email: "Vui lòng nhập email" })
-      setIsLoading(false)
-      return
-    }
-    if (!formData.password) {
-      setErrors({ password: "Vui lòng nhập mật khẩu" })
-      setIsLoading(false)
-      return
-    }
-
-    try {
-      const res = await fetch(`${process.env.API_URL}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setErrors(data.errors || { api: data.message || "Đăng nhập thất bại" })
-        setIsLoading(false)
-        return
-      }
-
-      // Lưu token + user
-      localStorage.setItem("authToken", data.token)
-      localStorage.setItem("userData", JSON.stringify(data.user))
-
-      setIsLoading(false)
-      onSuccess(data.user)
-      router.push("/dashboard")
-    } catch (error) {
-      setErrors({ api: "Lỗi kết nối máy chủ" })
-      setIsLoading(false)
-    }
+  if (!formData.email) {
+    setErrors({ email: "Vui lòng nhập email" })
+    setIsLoading(false)
+    return
   }
+  if (!formData.password) {
+    setErrors({ password: "Vui lòng nhập mật khẩu" })
+    setIsLoading(false)
+    return
+  }
+
+  try {
+    const res = await fetch("http://localhost:8080/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+    })
+
+    if (!res.ok) {
+  let errorMsg = "Đăng nhập thất bại";
+  try {
+    const errorData = await res.json();
+    errorMsg = errorData.message || errorMsg;
+  } catch {
+    errorMsg = await res.text() || errorMsg;
+  }
+  setErrors({ api: errorMsg });
+  setIsLoading(false);
+  return;
+}
+
+    const data = await res.json()
+
+    // Lưu token + user
+    localStorage.setItem("authToken", data.token)
+    localStorage.setItem("userData", JSON.stringify(data.user))
+
+    setIsLoading(false)
+    onSuccess({ user: data.user, token: data.token })
+    
+  } catch (error) {
+    setErrors({ api: "Lỗi kết nối máy chủ" })
+    setIsLoading(false)
+  }
+}
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">

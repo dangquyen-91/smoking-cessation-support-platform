@@ -6,13 +6,23 @@ import { useRouter } from "next/navigation"
 export default function Login() {
   const router = useRouter()
 
-  const handleSuccess = (userData?: any) => {
-    const token = "auth_" + Date.now()
-    localStorage.setItem("authToken", token)
-    if (userData) {
-      localStorage.setItem("userData", JSON.stringify(userData))
+  const handleSuccess = (authData?: { user: any; token: string }) => {
+    if (!authData) return
+
+    // Lưu user và token mới vào localStorage
+    localStorage.setItem("authToken", authData.token)
+    localStorage.setItem("userData", JSON.stringify(authData.user))
+
+    // Debug: kiểm tra role trả về
+    console.log("Login success, role:", authData.user.role)
+
+    if (authData.user.role === "admin") {
+      router.push("/admin")
+    } else if (authData.user.role === "coach") {
+      router.push("/coach")
+    } else {
+      router.push("/dashboard")
     }
-    router.push("/dashboard")
   }
 
   return (

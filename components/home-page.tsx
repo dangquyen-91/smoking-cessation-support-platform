@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { motion } from "framer-motion"
 import {
   Heart,
   Calculator,
@@ -17,6 +18,11 @@ import {
   Users,
 } from "lucide-react"
 import type { HomePageProps } from "@/types/components"
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+}
 
 export function HomePage({
   onAssessment,
@@ -90,7 +96,13 @@ export function HomePage({
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <motion.header
+        className="bg-white shadow-sm border-b"
+        initial="hidden"
+        animate="visible"
+        variants={fadeInUp}
+        transition={{ duration: 0.8 }}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
@@ -100,7 +112,6 @@ export function HomePage({
                 <p className="text-xs text-gray-600">Sức khỏe là vàng</p>
               </div>
             </div>
-            {/* Header buttons */}
             <div className="flex items-center gap-4">
               <Button variant="outline" onClick={onLogin}>
                 Đăng nhập
@@ -111,34 +122,45 @@ export function HomePage({
             </div>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <motion.section
+        className="py-20 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.1 }}
+      >
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             Hành trình cai thuốc lá
             <span className="text-green-600"> thành công</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Ứng dụng hỗ trợ cai thuốc lá toàn diện với công nghệ A.I., huấn luyện viên chuyên nghiệp và cộng đồng hỗ trợ
-            tích cực
+            Ứng dụng hỗ trợ cai thuốc lá toàn diện với công nghệ A.I., huấn luyện viên chuyên nghiệp và cộng đồng hỗ trợ tích cực
           </p>
-          {/* Hero section buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" onClick={onRegister} className="bg-green-600 hover:bg-green-700">
-              Bắt đầu ngay - Miễn phí
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button size="lg" variant="outline" onClick={onAssessment}>
-              Đánh giá mức độ nghiện
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <Button size="lg" onClick={onRegister} className="bg-green-600 hover:bg-green-700">
+                Bắt đầu ngay - Miễn phí
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white">
+      <motion.section
+        className="py-16 bg-white"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
             <div>
@@ -159,10 +181,47 @@ export function HomePage({
             </div>
           </div>
         </div>
-      </section>
+      </motion.section>
+
+      {/* Video giới thiệu */}
+      <motion.section
+  className="py-16 px-4 bg-white"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true, amount: 0.3 }}
+  variants={fadeInUp}
+  transition={{ duration: 0.8, delay: 0.2 }}
+>
+  <div className="max-w-7xl mx-auto text-center mb-12">
+    <h2 className="text-3xl font-bold text-gray-900 mb-4">Video giới thiệu</h2>
+    <p className="text-gray-600 mb-6">Khám phá cách ứng dụng có thể đồng hành cùng bạn</p>
+    <div
+      className="relative w-full max-w-6xl mx-auto rounded-lg overflow-hidden shadow-lg border border-gray-200"
+      style={{ paddingTop: "42.85%" }} // 21:9 ratio
+    >
+      <iframe
+        src="https://www.youtube.com/embed/NyzNaEPnKkk"
+        title="Giới thiệu ứng dụng Cai Thuốc"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        className="absolute top-0 left-0 w-full h-full"
+      />
+    </div>
+  </div>
+</motion.section>
+
+
 
       {/* Harmful Effects */}
-      <section className="py-16 px-4">
+      <motion.section
+        className="py-16 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Tác hại của thuốc lá</h2>
@@ -170,162 +229,32 @@ export function HomePage({
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {harmfulEffects.map((effect, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="text-4xl mb-4">{effect.icon}</div>
-                  <h3 className="font-bold text-gray-900 mb-2">{effect.title}</h3>
-                  <p className="text-sm text-gray-600">{effect.description}</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.05, boxShadow: "0 8px 15px rgba(0,0,0,0.1)" }}
+              >
+                <Card className="text-center transition-shadow cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="text-4xl mb-4">{effect.icon}</div>
+                    <h3 className="font-bold text-gray-900 mb-2">{effect.title}</h3>
+                    <p className="text-sm text-gray-600">{effect.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Benefits Timeline */}
-      <section className="py-16 bg-white px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Lợi ích khi ngừng hút thuốc</h2>
-            <p className="text-gray-600">Cơ thể bạn sẽ phục hồi nhanh chóng</p>
-          </div>
-          <div className="space-y-6">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-center gap-6 p-4 bg-green-50 rounded-lg">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <CheckCircle className="h-8 w-8 text-green-600" />
-                </div>
-                <div>
-                  <div className="font-bold text-green-800 text-lg">{benefit.time}</div>
-                  <div className="text-gray-700">{benefit.effect}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tools Section */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Công cụ hỗ trợ miễn phí</h2>
-            <p className="text-gray-600">Thử ngay các công cụ đánh giá và tính toán</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {tools.map((tool, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow cursor-pointer" onClick={tool.onClick}>
-                <CardContent className="p-6 text-center">
-                  <div className={`w-16 h-16 ${tool.bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                    <tool.icon className={`h-8 w-8 ${tool.color}`} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">{tool.title}</h3>
-                  <p className="text-gray-600 mb-4">{tool.description}</p>
-                  <Button variant="outline" className="w-full">
-                    Thử ngay
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Community Preview */}
-      <section className="py-16 bg-gray-50 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Cộng đồng hỗ trợ</h2>
-            <p className="text-gray-600">Kết nối với những người cùng hành trình</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Community preview section */}
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={onResources}>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <BookOpen className="h-8 w-8 text-blue-600" />
-                  <div>
-                    <h3 className="font-bold text-gray-900">Blog</h3>
-                    <p className="text-gray-600">Chia sẻ kinh nghiệm và lời khuyên</p>
-                  </div>
-                </div>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div>• 500+ bài viết từ chuyên gia</div>
-                  <div>• Câu chuyện thành công thực tế</div>
-                  <div>• Mẹo và thủ thuật hữu ích</div>
-                </div>
-                <Button variant="outline" className="w-full mt-4">
-                  Đọc Blog
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={onCommunity}>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <MessageSquare className="h-8 w-8 text-green-600" />
-                  <div>
-                    <h3 className="font-bold text-gray-900">Forum</h3>
-                    <p className="text-gray-600">Thảo luận và hỗ trợ lẫn nhau</p>
-                  </div>
-                </div>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div>• 1000+ thành viên tích cực</div>
-                  <div>• Hỏi đáp và chia sẻ kinh nghiệm</div>
-                  <div>• Hỗ trợ 24/7 từ cộng đồng</div>
-                </div>
-                <Button variant="outline" className="w-full mt-4">
-                  Xem Forum
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Chọn gói phù hợp</h2>
-            <p className="text-gray-600">Bắt đầu miễn phí, nâng cấp khi cần</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {packages.map((pkg, index) => (
-              <Card key={index} className={`relative ${pkg.popular ? "ring-2 ring-green-500" : ""}`}>
-                {pkg.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-green-600 text-white">Phổ biến nhất</Badge>
-                  </div>
-                )}
-                <CardContent className="p-6 text-center">
-                  <h3 className="font-bold text-xl mb-2">{pkg.name}</h3>
-                  <div className="text-3xl font-bold text-green-600 mb-4">{pkg.price}</div>
-                  <ul className="space-y-2 mb-6">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  {/* Package selection buttons */}
-                  <Button
-                    className={`w-full ${pkg.popular ? "bg-green-600 hover:bg-green-700" : ""}`}
-                    variant={pkg.popular ? "default" : "outline"}
-                    onClick={onRegister}
-                  >
-                    {pkg.name === "Miễn phí" ? "Bắt đầu ngay" : "Chọn gói"}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      </motion.section>
 
       {/* Testimonials */}
-      <section className="py-16 bg-white px-4">
+      <motion.section
+        className="py-16 bg-white px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Câu chuyện thành công</h2>
@@ -349,83 +278,113 @@ export function HomePage({
                 rating: 5,
               },
             ].map((testimonial, index) => (
-              <Card key={index}>
-                <CardContent className="p-6">
-                  <div className="flex mb-4">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star key={star} className="h-4 w-4 text-yellow-500 fill-current" />
-                    ))}
-                  </div>
-                  <p className="text-gray-700 mb-4">"{testimonial.story}"</p>
-                  <p className="font-medium text-gray-900">- {testimonial.name}</p>
-                </CardContent>
-              </Card>
+              <motion.div
+                key={index}
+                whileHover={{ scale: 1.05, boxShadow: "0 8px 15px rgba(0,0,0,0.1)" }}
+              >
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex mb-4">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star key={star} className="h-4 w-4 text-yellow-500 fill-current" />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 mb-4">"{testimonial.story}"</p>
+                    <p className="font-medium text-gray-900">- {testimonial.name}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* App Features */}
-      <section className="py-16 px-4">
+      <motion.section
+        className="py-16 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Tính năng ứng dụng</h2>
             <p className="text-gray-600">Hệ thống hỗ trợ toàn diện cho hành trình cai thuốc</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">Theo dõi tiến trình</h3>
-                <p className="text-gray-600 text-sm">Ghi nhận và theo dõi hành trình cai thuốc chi tiết</p>
-              </CardContent>
-            </Card>
+            <motion.div whileHover={{ scale: 1.05, boxShadow: "0 8px 15px rgba(0,0,0,0.1)" }}>
+              <Card className="text-center transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <TrendingUp className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-2">Theo dõi tiến trình</h3>
+                  <p className="text-gray-600 text-sm">Ghi nhận và theo dõi hành trình cai thuốc chi tiết</p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Bot className="h-8 w-8 text-green-600" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">A.I. Tư vấn</h3>
-                <p className="text-gray-600 text-sm">Trí tuệ nhân tạo hỗ trợ 24/7</p>
-              </CardContent>
-            </Card>
+            <motion.div whileHover={{ scale: 1.05, boxShadow: "0 8px 15px rgba(0,0,0,0.1)" }}>
+              <Card className="text-center transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="w-16 h-16 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Bot className="h-8 w-8 text-green-600" />
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-2">A.I. Tư vấn</h3>
+                  <p className="text-gray-600 text-sm">Trí tuệ nhân tạo hỗ trợ 24/7</p>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Users className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-2">Cộng đồng</h3>
-                <p className="text-gray-600 text-sm">Kết nối với những người cùng hành trình</p>
-              </CardContent>
-            </Card>
+            <motion.div whileHover={{ scale: 1.05, boxShadow: "0 8px 15px rgba(0,0,0,0.1)" }}>
+              <Card className="text-center transition-shadow cursor-pointer">
+                <CardContent className="p-6">
+                  <div className="w-16 h-16 bg-purple-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Users className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-2">Cộng đồng</h3>
+                  <p className="text-gray-600 text-sm">Kết nối với những người cùng hành trình</p>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-green-600 text-white px-4">
+      <motion.section
+        className="py-20 bg-green-600 text-white px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Bắt đầu hành trình cai thuốc lá ngay hôm nay</h2>
           <p className="text-xl mb-8 opacity-90">Hàng ngàn người đã thành công. Bạn cũng có thể làm được!</p>
-          {/* CTA section */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" onClick={onRegister}>
-              Đăng ký miễn phí
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-green-600" onClick={onAssessment}>
-              Tìm hiểu thêm
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <Button size="lg" variant="secondary" onClick={onRegister}>
+                Đăng ký miễn phí
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
+      <motion.footer
+        className="bg-gray-900 text-white py-12 px-4"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeInUp}
+        transition={{ duration: 0.8, delay: 0.3 }}
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -466,7 +425,7 @@ export function HomePage({
             <p>&copy; 2024 Cai Thuốc Lá. Tất cả quyền được bảo lưu.</p>
           </div>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   )
 }

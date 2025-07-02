@@ -34,56 +34,59 @@ export function RegisterForm({ onBack, onSuccess, onSwitchMode }: RegisterFormPr
   }
 
   const handleRegister = async () => {
-    setIsLoading(true)
-    setErrors({})
+  setIsLoading(true)
+  setErrors({})
 
-    // Validate các trường ở FE trước khi gửi lên BE
-    const newErrors: Record<string, string> = {};
-    if (!formData.fullName) newErrors.fullName = "Vui lòng nhập họ tên";
-    if (!formData.email) newErrors.email = "Vui lòng nhập email";
-    if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
-    if (!formData.password) newErrors.password = "Vui lòng nhập mật khẩu";
-    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
-    // if (!formData.agreeTerms) newErrors.agreeTerms = "Bạn phải đồng ý với điều khoản sử dụng";
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+  // Validate các trường ở FE trước khi gửi lên BE
+  const newErrors: Record<string, string> = {};
+  if (!formData.fullName) newErrors.fullName = "Vui lòng nhập họ tên";
+  if (!formData.email) newErrors.email = "Vui lòng nhập email";
+  if (!formData.phone) newErrors.phone = "Vui lòng nhập số điện thoại";
+  if (!formData.password) newErrors.password = "Vui lòng nhập mật khẩu";
+  if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Mật khẩu xác nhận không khớp";
+  if (Object.keys(newErrors).length > 0) {
+    setErrors(newErrors);
+    setIsLoading(false);
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:8080/api/auth/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+        fullName: formData.fullName,
+        phone: formData.phone,
+      }),
+    });
+
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+
+    if (!res.ok) {
+      setErrors(data.errors || { api: data.message || "Đăng ký thất bại" });
       setIsLoading(false);
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost:8080/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          fullName: formData.fullName,
-          phone: formData.phone,
-          // Gửi thêm các trường khác nếu BE yêu cầu
-        }),
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setErrors(data.errors || { api: data.message || "Đăng ký thất bại" })
-        setIsLoading(false)
-        return
-      }
-
-      localStorage.setItem("authToken", data.token)
-      localStorage.setItem("userData", JSON.stringify(data.user))
-      setIsLoading(false)
-      router.push("/dashboard")
-      onSuccess(data.user)
-    } catch (err) {
-      setErrors({ api: "Lỗi kết nối máy chủ" })
-      setIsLoading(false)
-    }
+    localStorage.setItem("authToken", data.token);
+    localStorage.setItem("userData", JSON.stringify(data.user));
+    setIsLoading(false);
+    router.push("/dashboard");
+    onSuccess(data.user);
+  } catch (err) {
+    setErrors({ api: "Lỗi kết nối máy chủ" });
+    setIsLoading(false);
   }
+}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">

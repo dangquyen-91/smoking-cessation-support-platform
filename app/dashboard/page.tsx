@@ -24,7 +24,7 @@ export default function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem("authToken")
     localStorage.removeItem("userData")
-    router.push("/login")
+    router.push("/")
   }
 
   return isLoggedIn ? <DashboardApp onLogout={handleLogout} /> : null

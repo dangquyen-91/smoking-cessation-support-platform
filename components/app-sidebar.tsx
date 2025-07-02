@@ -42,11 +42,7 @@ const menuItems = [
     icon: User,
     key: "profile",
   },
-  {
-    title: "Tình trạng hút thuốc",
-    icon: Cigarette,
-    key: "smoking-status",
-  },
+  
   {
     title: "Kế hoạch cai thuốc",
     icon: Target,

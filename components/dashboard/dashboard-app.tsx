@@ -5,7 +5,6 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Dashboard } from "@/components/dashboard"
 import { Profile } from "@/components/profile"
-import { SmokingStatus } from "@/components/smoking-status"
 import { QuitPlan } from "@/components/quit-plan"
 import { Progress } from "@/components/progress"
 import { Community } from "@/components/community"
@@ -29,8 +28,6 @@ export function DashboardApp({ onLogout }: DashboardAppProps) {
         return <Dashboard />
       case "profile":
         return <Profile />
-      case "smoking-status":
-        return <SmokingStatus />
       case "quit-plan":
         return <QuitPlan />
       case "progress":

@@ -42,9 +42,6 @@ export function Navigation({ isLoggedIn, onLogin, onRegister, onLogout, onNaviga
 
   const navItems = [
     { href: "/", label: "Trang chủ", icon: Home },
-    { href: "/assessment", label: "Đánh giá", icon: Calculator, action: () => onNavigate("addiction-tool") },
-    { href: "/cost-calculator", label: "Tính chi phí", icon: Calculator, action: () => onNavigate("cost-tool") },
-    { href: "/resources", label: "Tài liệu", icon: FileText, action: () => onNavigate("guides") },
     { href: "/community", label: "Cộng đồng", icon: Users, action: () => onNavigate("guest-forum") },
   ]
 
