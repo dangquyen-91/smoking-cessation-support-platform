@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import { motion } from "framer-motion";
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +11,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
   User,
@@ -23,12 +24,12 @@ import {
   Video,
   Package,
   Heart,
-} from "lucide-react"
+} from "lucide-react";
 
 interface AppSidebarProps {
-  activeTab: string
-  setActiveTab: (tab: string) => void
-  onLogout: () => void
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  onLogout: () => void;
 }
 
 const menuItems = [
@@ -42,11 +43,7 @@ const menuItems = [
     icon: User,
     key: "profile",
   },
-  {
-    title: "Tình trạng hút thuốc",
-    icon: Cigarette,
-    key: "smoking-status",
-  },
+
   {
     title: "Kế hoạch cai thuốc",
     icon: Target,
@@ -57,7 +54,7 @@ const menuItems = [
     icon: TrendingUp,
     key: "progress",
   },
-]
+];
 
 const communityItems = [
   {
@@ -75,7 +72,7 @@ const communityItems = [
     icon: MessageSquare,
     key: "forum",
   },
-]
+];
 
 const supportItems = [
   {
@@ -83,10 +80,15 @@ const supportItems = [
     icon: Video,
     key: "coach-chat",
   },
+];
 
-]
+const MotionSidebarMenuButton = motion(SidebarMenuButton);
 
-export function AppSidebar({ activeTab, setActiveTab, onLogout }: AppSidebarProps) {
+export function AppSidebar({
+  activeTab,
+  setActiveTab,
+  onLogout,
+}: AppSidebarProps) {
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
@@ -106,10 +108,19 @@ export function AppSidebar({ activeTab, setActiveTab, onLogout }: AppSidebarProp
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton onClick={() => setActiveTab(item.key)} isActive={activeTab === item.key}>
+                  <MotionSidebarMenuButton
+                    onClick={() => setActiveTab(item.key)}
+                    isActive={activeTab === item.key}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    animate={{
+                      backgroundColor:
+                        activeTab === item.key ? "#D1FAE5" : "#FFFFFF",
+                    }}
+                  >
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
-                  </SidebarMenuButton>
+                  </MotionSidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -122,10 +133,19 @@ export function AppSidebar({ activeTab, setActiveTab, onLogout }: AppSidebarProp
             <SidebarMenu>
               {communityItems.map((item) => (
                 <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton onClick={() => setActiveTab(item.key)} isActive={activeTab === item.key}>
+                  <MotionSidebarMenuButton
+                    onClick={() => setActiveTab(item.key)}
+                    isActive={activeTab === item.key}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    animate={{
+                      backgroundColor:
+                        activeTab === item.key ? "#D1FAE5" : "#FFFFFF",
+                    }}
+                  >
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
-                  </SidebarMenuButton>
+                  </MotionSidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -138,10 +158,19 @@ export function AppSidebar({ activeTab, setActiveTab, onLogout }: AppSidebarProp
             <SidebarMenu>
               {supportItems.map((item) => (
                 <SidebarMenuItem key={item.key}>
-                  <SidebarMenuButton onClick={() => setActiveTab(item.key)} isActive={activeTab === item.key}>
+                  <MotionSidebarMenuButton
+                    onClick={() => setActiveTab(item.key)}
+                    isActive={activeTab === item.key}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    animate={{
+                      backgroundColor:
+                        activeTab === item.key ? "#D1FAE5" : "#FFFFFF",
+                    }}
+                  >
                     <item.icon className="h-4 w-4" />
                     <span>{item.title}</span>
-                  </SidebarMenuButton>
+                  </MotionSidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
@@ -149,5 +178,5 @@ export function AppSidebar({ activeTab, setActiveTab, onLogout }: AppSidebarProp
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }
