@@ -1,0 +1,44 @@
+import BaseRequest from "@/app/config/BaseRequest";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export const useGetUserByRole = (role: string) => {
+    if (role === "all") {
+        return useQuery({
+            queryKey: ["get-all-user"],
+            queryFn: async () => {
+                return await BaseRequest.Get(`/api/users/all`);
+            },
+        });
+    } else {
+        return useQuery({
+            queryKey: ["get-user-coaches", role],
+            queryFn: async () => {
+                return await BaseRequest.Get(`/api/users/coaches`);
+            },
+        });
+    }
+};
+
+export const useRegisterUser = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: any) => {
+            return await BaseRequest.Post(`/api/users/register`, data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["get-all-user"] });
+        },
+    });
+};
+
+export const useUpdateStatusUser = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: any) => {
+            return await BaseRequest.Put(`/api/users/${data.id}/status`, data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["get-all-user"] });
+        },
+    });
+};
