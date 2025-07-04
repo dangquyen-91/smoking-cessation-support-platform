@@ -45,3 +45,40 @@ export const useDeleteBlog = () => {
         },
     });
 };
+
+export const useGetBlogById = (id: string) => {
+    return useQuery({
+        queryKey: ["get-blog-by-id", id],
+        queryFn: async () => {
+            return await BaseRequest.Get(`/api/blog/${id}`);
+        },
+    });
+};
+
+export const useGetMyBlogs = (userId: any) => {
+    return useQuery({
+        queryKey: ["get-my-blogs", userId],
+        queryFn: async () => {
+            return await BaseRequest.Get(`/api/blog/author/${userId}`);
+        },
+    });
+};
+
+export const useLikeBlogs = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: any) => {
+            return await BaseRequest.Post(`/api/blog/${data}/like`, data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["get-all-blog"],
+                exact: false,
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["get-blog-by-id"],
+                exact: false,
+            });
+        },
+    });
+};

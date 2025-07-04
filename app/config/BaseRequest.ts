@@ -12,10 +12,11 @@ const BaseRequest = {
     ): Promise<[any, T | null]> => {
         try {
             const res: any = await axiosInstance.post(url, data);
-            if (res?.success) return [null, res.data];
-            return [res?.message || "Unknown error", null];
+            console.log("Response from POST:", res);
+            if (res.status == 200) return [null, res.data];
+            return [res || "Unknown error", null];
         } catch (err: any) {
-            return [err?.data?.message || err.message, null];
+            return ["Gặp lỗi, vui lòng thử lại", null];
         }
     },
 

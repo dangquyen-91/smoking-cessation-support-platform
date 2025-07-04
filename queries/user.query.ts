@@ -42,3 +42,44 @@ export const useUpdateStatusUser = () => {
         },
     });
 };
+
+export const useLoginUser = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: any) => {
+            return await BaseRequest.Post(`/api/users/login`, data);
+        },
+    });
+};
+
+export const useGetUserById = (id: string) => {
+    return useQuery({
+        queryKey: ["get-user-by-id", id],
+        queryFn: async () => {
+            return await BaseRequest.Get(`/api/users/${id}`);
+        },
+    });
+};
+
+export const useUpdateUser = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: any) => {
+            return await BaseRequest.Put(`/api/users/${data.id}`, data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["get-user-by-id"],
+                exact: false,
+            });
+        },
+    });
+};
+export const useGetMySocialPosts = (userId: string) => {
+    return useQuery({
+        queryKey: ["get-my-social-posts", userId],
+        queryFn: async () => {
+            return await BaseRequest.Get(`/api/social-posts/user/${userId}`);
+        },
+    });
+};

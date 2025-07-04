@@ -5,7 +5,7 @@ import { getCookie } from "cookies-next";
 const baseURL =
     process.env.NODE_ENV === "production"
         ? "https://scsp.autopass.blog/"
-        : "https://scsp.autopass.blog/";
+        : "http://localhost:8080/";
 
 const axiosInstance = axios.create({
     baseURL,
