@@ -1,4 +1,5 @@
 import BaseRequest from "@/app/config/BaseRequest";
+import utils from "@/utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetUserByRole = (role: string) => {
@@ -80,6 +81,28 @@ export const useGetMySocialPosts = (userId: string) => {
         queryKey: ["get-my-social-posts", userId],
         queryFn: async () => {
             return await BaseRequest.Get(`/api/social-posts/user/${userId}`);
+        },
+    });
+};
+
+export const useGetUserSavingData = () => {
+    const userId = utils.getUserId();
+    return useQuery({
+        queryKey: ["get-user-saving-data", userId],
+        queryFn: async () => {
+            return await BaseRequest.Get(
+                `/api/users/${userId}/get-user-saving-data`
+            );
+        },
+    });
+};
+
+export const useGetUserProgress = () => {
+    const userId = utils.getUserId();
+    return useQuery({
+        queryKey: ["get-user-progress", userId],
+        queryFn: async () => {
+            return await BaseRequest.Get(`/api/users/${userId}/get-progress`);
         },
     });
 };

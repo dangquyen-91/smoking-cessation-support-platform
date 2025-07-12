@@ -45,6 +45,11 @@ import {
     useGetAllSocialPost,
 } from "@/queries/scoial-post.query";
 import utils from "@/utils/utils";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Define the PostType enum and mappings
 const POST_TYPES = {
@@ -384,10 +389,69 @@ export default function Community() {
                                                                         post.type
                                                                     )}
                                                                 </Badge>
-                                                                {post.isPinned && (
-                                                                    <Badge variant="default">
-                                                                        Ghim
-                                                                    </Badge>
+                                                                {post.user
+                                                                    .achievements
+                                                                    ?.length >
+                                                                    0 && (
+                                                                    <span className="text-yellow-500">
+                                                                        {post.user.achievements.map(
+                                                                            (
+                                                                                achievement: any
+                                                                            ) => (
+                                                                                // 1. TooltipTrigger: thêm hover/active effect cho badge icon
+                                                                                <Tooltip>
+                                                                                    <TooltipTrigger
+                                                                                        asChild
+                                                                                    >
+                                                                                        <img
+                                                                                            src={
+                                                                                                achievement
+                                                                                                    .achievement
+                                                                                                    .badgeIcon
+                                                                                            }
+                                                                                            alt={
+                                                                                                achievement
+                                                                                                    .achievement
+                                                                                                    .name
+                                                                                            }
+                                                                                            className="
+        h-6 w-6 inline-block ml-1 rounded-full
+        transition-transform duration-200 ease-in-out
+        hover:scale-110 active:rotate-12
+      "
+                                                                                        />
+                                                                                    </TooltipTrigger>
+
+                                                                                    {/* 2. TooltipContent: fade + slide animation khi mở */}
+                                                                                    <TooltipContent
+                                                                                        side="top" // có thể là top/bottom/left/right
+                                                                                        align="center"
+                                                                                        sideOffset={
+                                                                                            6
+                                                                                        }
+                                                                                        className="
+      rounded-md bg-gray-900 p-2 shadow-lg
+      text-sm text-green-400
+      will-change-[transform,opacity]
+      data-[state=open]:animate-fade-in
+      data-[state=open]:data-[side=top]:animate-slide-down
+      data-[state=open]:data-[side=bottom]:animate-slide-up
+      data-[state=open]:data-[side=left]:animate-slide-right
+      data-[state=open]:data-[side=right]:animate-slide-left
+    "
+                                                                                    >
+                                                                                        <p>
+                                                                                            {
+                                                                                                achievement
+                                                                                                    .achievement
+                                                                                                    .name
+                                                                                            }
+                                                                                        </p>
+                                                                                    </TooltipContent>
+                                                                                </Tooltip>
+                                                                            )
+                                                                        )}
+                                                                    </span>
                                                                 )}
                                                             </div>
                                                             <p className="text-gray-700 mb-3">

@@ -326,7 +326,7 @@ export default function BlogPage() {
             }
             return acc;
         }, [])
-        .sort((a, b) => b.postsCount - a.postsCount)
+        .sort((a: FeaturedAuthor, b: FeaturedAuthor) => b.postsCount - a.postsCount)
         .slice(0, 2);
 
     return (
