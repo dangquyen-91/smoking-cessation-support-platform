@@ -14,6 +14,10 @@ import {
     Globe,
     ChevronLeft,
     ChevronRight,
+    Archive,
+    ArchiveIcon,
+    Award,
+    PackagePlus,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -43,6 +47,16 @@ const sidebarItems = [
         title: "Bài đăng mạng xã hội",
         href: "/admin/social-posts",
         icon: Globe,
+    },
+    {
+        title: "Danh hiệu",
+        href: "/admin/achievements",
+        icon: Award,
+    },
+    {
+        title: "Gói",
+        href: "/admin/packages",
+        icon: PackagePlus,
     },
     {
         title: "Cài đặt",
