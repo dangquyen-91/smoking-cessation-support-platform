@@ -22,6 +22,9 @@ import {
     MessageSquare,
     Video,
     Heart,
+    Calculator,
+    PackagePlus,
+    Package2,
 } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -41,19 +44,16 @@ const menuItems = [
         icon: Cigarette,
         key: "/dashboard/smoking-status",
     },
+
     {
-        title: "Kế hoạch cai thuốc",
-        icon: Target,
-        key: "/dashboard/quit-plan",
+        title: "Lịch trình cai thuốc",
+        icon: LayoutDashboard,
+        key: "/dashboard/plan-calendar",
     },
-    {
-        title: "Theo dõi tiến trình",
-        icon: TrendingUp,
-        key: "/dashboard/progress",
-    },
+
     {
         title: "Tính chi phí hút thuốc",
-        icon: Cigarette,
+        icon: Calculator,
         key: "/dashboard/cost-calculator",
     },
 ];
@@ -81,6 +81,11 @@ const supportItems = [
         title: "Chat với Coach",
         icon: Video,
         key: "/dashboard/coach-chat",
+    },
+    {
+        title: "Gói của bạn",
+        icon: Package2,
+        key: "/dashboard/packages",
     },
 ];
 
