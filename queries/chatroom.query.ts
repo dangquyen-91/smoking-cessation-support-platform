@@ -37,6 +37,11 @@ export const useSendMessageToChatRoom = () => {
                 queryKey: ["get-chatroom-by-id"],
                 exact: false,
             });
+
+            queryClient.invalidateQueries({
+                queryKey: ["get-messages-by-chatroom-id"],
+                exact: false,
+            });
         },
     });
 };
@@ -60,5 +65,17 @@ export const useGetChatRoomByParticipant = () => {
                 `/api/chatrooms/participant/${userId}`
             );
         },
+    });
+};
+
+export const useGetListMessagesByChatRoomId = (chatRoomId: any) => {
+    return useQuery({
+        queryKey: ["get-messages-by-chatroom-id", chatRoomId],
+        queryFn: async () => {
+            return await BaseRequest.Get(
+                `/api/chatrooms/${chatRoomId}/messages`
+            );
+        },
+        enabled: !!chatRoomId, // Only run if chatRoomId is provided
     });
 };

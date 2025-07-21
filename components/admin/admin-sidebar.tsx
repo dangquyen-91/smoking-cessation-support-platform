@@ -39,6 +39,11 @@ const sidebarItems = [
         icon: Users,
     },
     {
+        title: "Huấn luyện viên",
+        href: "/admin/coaches",
+        icon: Users,
+    },
+    {
         title: "Danh sách Blog",
         href: "/admin/content",
         icon: FileText,

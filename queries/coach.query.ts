@@ -9,3 +9,14 @@ export const useGetCoach = () => {
         },
     });
 };
+
+export const useGetAllListCoachRequests = (status: any) => {
+    return useQuery({
+        queryKey: ["get-coach-requests", status],
+        queryFn: async () => {
+            return await BaseRequest.Get(
+                `/api/consultations/requests?status=${status}`
+            );
+        },
+    });
+};

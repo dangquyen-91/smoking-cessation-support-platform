@@ -231,36 +231,6 @@ export default function Layout({ children }: LayoutProps) {
         setIsDropdownOpen(false);
     };
     const [title, setTitle] = useState<string>("Cai Thuốc Lá");
-    const pathName = window.location.pathname;
-    useEffect(() => {
-        const getTitleByPathname = () => {
-            const pathname = window.location.pathname;
-            switch (pathname) {
-                case "/dashboard":
-                    return "Bảng Điều Khiển";
-                case "/dashboard/profile":
-                    return "Hồ Sơ Cá Nhân";
-                case "/dashboard/smoking-status":
-                    return "Tình trạng hút thuốc";
-                case "/dashboard/plan-calendar":
-                    return "Lịch trình cai thuốc";
-                case "/dashboard/progress":
-                    return "Theo dõi tiến trình";
-                case "/dashboard/community":
-                    return "Cộng đồng";
-                case "/dashboard/blog":
-                    return "Blog";
-                case "/dashboard/forum":
-                    return "Diễn đàn";
-                case "/dashboard/coach-chat":
-                    return "Chat với Coach";
-                default:
-                    return "Cai Thuốc Lá";
-            }
-        };
-        const title = getTitleByPathname();
-        setTitle(title);
-    }, [pathName]);
 
     return (
         <Providers>
