@@ -544,6 +544,7 @@ export default function SmokingQuitPlan() {
                                     </Label>
                                     <Input
                                         type="number"
+                                        min="0"
                                         value={cigarettesPerDay}
                                         onChange={(e) =>
                                             setCigarettesPerDay(e.target.value)
@@ -587,6 +588,7 @@ export default function SmokingQuitPlan() {
                                     </Label>
                                     <Input
                                         type="number"
+                                        min="0"
                                         value={cigarettePrice}
                                         onChange={(e) =>
                                             setCigarettePrice(e.target.value)
@@ -661,6 +663,7 @@ export default function SmokingQuitPlan() {
                                     </Label>
                                     <Input
                                         type="number"
+                                        min="0"
                                         value={attemptsToQuit}
                                         onChange={(e) =>
                                             setAttemptsToQuit(e.target.value)
