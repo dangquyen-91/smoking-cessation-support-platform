@@ -30,49 +30,14 @@ import {
 
 const sidebarItems = [
     {
-        title: "Tổng quan",
-        href: "/admin",
+        title: "Tin nhắn",
+        href: "/coach",
         icon: LayoutDashboard,
     },
     {
-        title: "Người dùng",
-        href: "/admin/users",
-        icon: Users,
-    },
-    {
-        title: "Huấn luyện viên",
-        href: "/admin/coaches",
-        icon: Users,
-    },
-    {
-        title: "Danh sách Blog",
-        href: "/admin/content",
-        icon: FileText,
-    },
-    {
-        title: "Bài đăng mạng xã hội",
-        href: "/admin/social-posts",
-        icon: Globe,
-    },
-    {
-        title: "Danh hiệu",
-        href: "/admin/achievements",
-        icon: Award,
-    },
-    {
-        title: "Gói",
-        href: "/admin/packages",
-        icon: PackagePlus,
-    },
-    {
-        title: "Rút tiền",
-        href: "/admin/withdraw",
+        title: "Thu nhập",
+        href: "/coach/income",
         icon: DollarSign,
-    },
-    {
-        title: "Cài đặt",
-        href: "/admin/settings",
-        icon: Settings,
     },
 ];
 
@@ -80,7 +45,7 @@ interface AdminSidebarProps {
     onToggle?: (collapsed: boolean) => void;
 }
 
-export function AdminSidebar({ onToggle }: AdminSidebarProps) {
+export function CoachSidebar({ onToggle }: AdminSidebarProps) {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const pathname = usePathname();
 
