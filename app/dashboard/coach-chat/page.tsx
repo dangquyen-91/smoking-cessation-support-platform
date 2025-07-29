@@ -34,6 +34,7 @@ export default function CoachChat() {
     const { data: userData } = useGetUserById(userId);
     const { data: listCoachs } = useGetCoach();
     const { mutateAsync: createChatRoom } = useCreateChatroom();
+    console.log("User Data:", userData);
     // Kiểm tra user có gói INTERMEDIATE active không
     const hasIntermediatePackage = userData?.userPackages?.some(
         (pkg) =>
@@ -44,8 +45,8 @@ export default function CoachChat() {
     const router = useRouter();
     const handleChatWithCoach = async (coachId) => {
         const payload = {
-            name: "Phòng tư vấn với huấn luyện viên",
-            description: "Phòng chat để trao đổi với huấn luyện viên",
+            name: "Chat with Coach",
+            description: "Chat room for coaching support",
             createdById: userId,
             participantId: coachId,
         };

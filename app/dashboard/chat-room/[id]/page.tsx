@@ -32,6 +32,7 @@ export default function ChatRoomMessagePage() {
     const [messageInput, setMessageInput] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const messagesEndRef = useRef(null);
+    const limitRemaining = utils.getLimitRemaining();
 
     const { data: chatRoomInfo, refetch: refetchChatRoom } =
         useGetChatRoomById(id);
@@ -53,6 +54,11 @@ export default function ChatRoomMessagePage() {
         e.preventDefault();
         if (!messageInput.trim() || isSending) return;
 
+        if (limitRemaining <= 0) {
+            alert("Bạn đã đạt giới hạn số lượng tin nhắn.");
+            return;
+        }
+
         try {
             const payload = {
                 content: messageInput.trim(),
@@ -63,6 +69,8 @@ export default function ChatRoomMessagePage() {
                 chatRoomId: id,
                 messageData: payload,
             });
+            utils.setLimitRemaining(limitRemaining - 1);
+
             setMessageInput("");
             await refetchChatRoom();
         } catch (error) {
@@ -413,7 +421,12 @@ export default function ChatRoomMessagePage() {
                     </form>
 
                     <p className="text-xs text-gray-500 mt-1 text-center">
-                        Nhấn Enter để gửi tin nhắn
+                        <p className="text-xs text-blue-500 mt-1 text-center">
+                               {" "}
+                            {limitRemaining > 0
+                                ? `Bạn còn ${limitRemaining} tin nhắn.`
+                                : "Bạn đã hết lượt gửi tin nhắn."}
+                        </p>
                     </p>
                 </div>
             </div>
