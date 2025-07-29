@@ -15,7 +15,7 @@ import { useState } from "react";
 import { SocialAuth } from "./social-auth";
 import { useRouter } from "next/navigation";
 import { useLoginUser } from "@/queries/user.query";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "./ui/use-toast";
 
 interface LoginFormProps {
     onBack: () => void;
@@ -36,7 +36,6 @@ export function LoginForm({
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const { mutateAsync: loginUser } = useLoginUser();
-    const { toast } = useToast();
     const handleInputChange = (field: string, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
@@ -64,11 +63,7 @@ export function LoginForm({
             if (err) {
                 setErrors({ api: "Email hoặc mật khẩu không đúng" });
                 setIsLoading(false);
-                toast({
-                    title: "Đăng nhập thất bại",
-                    description: "Email hoặc mật khẩu không đúng",
-                    variant: "destructive",
-                });
+                alert(err);
                 return;
             }
 

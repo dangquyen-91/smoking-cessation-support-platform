@@ -14,11 +14,6 @@ import {
     Globe,
     ChevronLeft,
     ChevronRight,
-    Archive,
-    ArchiveIcon,
-    Award,
-    PackagePlus,
-    DollarSign,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,11 +35,6 @@ const sidebarItems = [
         icon: Users,
     },
     {
-        title: "Huấn luyện viên",
-        href: "/admin/coaches",
-        icon: Users,
-    },
-    {
         title: "Danh sách Blog",
         href: "/admin/content",
         icon: FileText,
@@ -53,21 +43,6 @@ const sidebarItems = [
         title: "Bài đăng mạng xã hội",
         href: "/admin/social-posts",
         icon: Globe,
-    },
-    {
-        title: "Danh hiệu",
-        href: "/admin/achievements",
-        icon: Award,
-    },
-    {
-        title: "Gói",
-        href: "/admin/packages",
-        icon: PackagePlus,
-    },
-    {
-        title: "Rút tiền",
-        href: "/admin/withdraw",
-        icon: DollarSign,
     },
     {
         title: "Cài đặt",

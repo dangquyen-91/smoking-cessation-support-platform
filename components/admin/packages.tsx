@@ -1,5 +1,6 @@
 "use client";
-import { useState, useMemo, useEffect, useCallback } from "react";
+
+import { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,58 +64,35 @@ import {
     Star,
     Calendar,
     TrendingUp,
-    Loader2,
 } from "lucide-react";
-import { useCreatePackage, useGetAllPackages } from "./package.query";
-import utils from "@/utils/utils";
 
 interface PackageInterface {
     id: number;
     name: string;
     description: string;
     totalDays: number;
-    featured: string;
     imageUrl: string;
     price: number;
     salePrice: number;
-    packageType: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "PREMIUM";
-    userId?: number;
+    rating: number | null;
+    totalRating: number;
     active: boolean;
-    rating?: number | null;
-    totalRating?: number;
+    fixed: boolean;
 }
 
 interface CreatePackagePayload {
     name: string;
     description: string;
     totalDays: number;
-    featured: string[];
     imageUrl: string;
     price: number;
     salePrice: number;
-    packageType: "BEGINNER" | "INTERMEDIATE" | "ADVANCED" | "PREMIUM";
     userId: number;
     active: boolean;
+    fixed: boolean;
 }
 
-// Available features for packages
-const PACKAGE_TYPES = [
-    {
-        value: "BEGINNER",
-        label: "Gói bắt đầu",
-        color: "bg-green-100 text-green-800",
-    },
-    {
-        value: "INTERMEDIATE",
-        label: "Gói Trung cấp",
-        color: "bg-blue-100 text-blue-800",
-    },
-    {
-        value: "ADVANCED",
-        label: "Gói Cao cấp",
-        color: "bg-purple-100 text-purple-800",
-    },
-];
+// Mock data for demonstration
 
 export function PackagesManagement() {
     const [packages, setPackages] = useState<PackageInterface[]>([]);
@@ -123,33 +101,17 @@ export function PackagesManagement() {
     const [statusFilter, setStatusFilter] = useState("ALL");
     const [typeFilter, setTypeFilter] = useState("ALL");
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-
-    const { mutateAsync: createPackage } = useCreatePackage();
-    const { data: listPackages, isLoading, error } = useGetAllPackages();
-
     const [newPackage, setNewPackage] = useState<CreatePackagePayload>({
         name: "",
         description: "",
         totalDays: 0,
-        featured: [],
         imageUrl: "",
         price: 0,
         salePrice: 0,
-        packageType: "BEGINNER",
         userId: 1,
         active: true,
+        fixed: false,
     });
-
-    // Sync data from API to local state
-    useEffect(() => {
-        if (
-            listPackages &&
-            Array.isArray(listPackages) &&
-            listPackages.length !== packages.length
-        ) {
-            setPackages(listPackages);
-        }
-    }, [listPackages]);
 
     const PACKAGES_PER_PAGE = 10;
 
@@ -166,13 +128,17 @@ export function PackagesManagement() {
                     (statusFilter === "ACTIVE" && pkg.active) ||
                     (statusFilter === "INACTIVE" && !pkg.active);
                 const matchesType =
-                    typeFilter === "ALL" || pkg.packageType === typeFilter;
+                    typeFilter === "ALL" ||
+                    (typeFilter === "FIXED" && pkg.fixed) ||
+                    (typeFilter === "REGULAR" && !pkg.fixed);
+
                 return matchesSearch && matchesStatus && matchesType;
             }),
         [packages, searchTerm, statusFilter, typeFilter]
     );
 
     const totalPages = Math.ceil(filteredPackages.length / PACKAGES_PER_PAGE);
+
     const paginatedPackages = useMemo(() => {
         const startIndex = (currentPage - 1) * PACKAGES_PER_PAGE;
         return filteredPackages.slice(
@@ -196,14 +162,18 @@ export function PackagesManagement() {
             </Badge>
         );
 
-    const getPackageTypeBadge = (packageType: string) => {
-        const type = PACKAGE_TYPES.find((t) => t.value === packageType);
-        return (
-            <Badge className={type?.color || "bg-gray-100 text-gray-800"}>
-                {type?.label || packageType}
+    const getTypeBadge = (fixed: boolean) =>
+        fixed ? (
+            <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                <Lock className="h-3 w-3 mr-1" />
+                Cố định
+            </Badge>
+        ) : (
+            <Badge className="bg-purple-100 text-purple-800 hover:bg-purple-200">
+                <Unlock className="h-3 w-3 mr-1" />
+                Thường
             </Badge>
         );
-    };
 
     const formatPrice = (price: number) =>
         new Intl.NumberFormat("vi-VN", {
@@ -211,55 +181,44 @@ export function PackagesManagement() {
             currency: "VND",
         }).format(price);
 
-    const handleCreatePackage = useCallback(async () => {
+    const handleCreatePackage = async () => {
         try {
-            // Filter out empty features before stringify
-            const filteredFeatures = newPackage.featured.filter(
-                (feature) => feature.trim() !== ""
-            );
-            // Simulate API call - stringify the featured array before sending
-            const payload = {
-                ...newPackage,
-                id: 0,
-                featured: JSON.stringify(filteredFeatures),
-            };
-            console.log("Creating package with payload:", payload);
-            await createPackage(payload);
-            const newId = Math.max(...packages.map((p) => p.id), 0) + 1;
+            // Simulate API call
+            const newId = Math.max(...packages.map((p) => p.id)) + 1;
             const created: PackageInterface = {
-                ...payload,
+                ...newPackage,
                 id: newId,
                 rating: null,
                 totalRating: 0,
             };
+
             setPackages((prev) => [created, ...prev]);
             setNewPackage({
                 name: "",
                 description: "",
                 totalDays: 0,
-                featured: [],
                 imageUrl: "",
                 price: 0,
                 salePrice: 0,
-                packageType: "BEGINNER",
-                userId: utils.getUserId(),
+                userId: 1,
                 active: true,
+                fixed: false,
             });
             setIsCreateDialogOpen(false);
         } catch (error) {
             console.error("Error creating package:", error);
         }
-    }, [newPackage, packages, createPackage]);
+    };
 
-    const handleDeletePackage = useCallback(async (packageId: number) => {
+    const handleDeletePackage = async (packageId: number) => {
         try {
             setPackages((prev) => prev.filter((p) => p.id !== packageId));
         } catch (error) {
             console.error("Error deleting package:", error);
         }
-    }, []);
+    };
 
-    const handleToggleStatus = useCallback(async (packageId: number) => {
+    const handleToggleStatus = async (packageId: number) => {
         try {
             setPackages((prev) =>
                 prev.map((p) =>
@@ -269,16 +228,13 @@ export function PackagesManagement() {
         } catch (error) {
             console.error("Error toggling package status:", error);
         }
-    }, []);
+    };
 
-    const handlePageChange = useCallback(
-        (page: number) => {
-            if (page >= 1 && page <= totalPages) {
-                setCurrentPage(page);
-            }
-        },
-        [totalPages]
-    );
+    const handlePageChange = (page: number) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
 
     const renderPaginationNumbers = () => {
         const pages = [];
@@ -317,46 +273,6 @@ export function PackagesManagement() {
             packages.filter((pkg) => pkg.rating).length || 0;
     const activePackagesCount = packages.filter((pkg) => pkg.active).length;
 
-    const parseFeatures = (featuredString: string): string[] => {
-        try {
-            return JSON.parse(featuredString);
-        } catch {
-            return [];
-        }
-    };
-
-    // Loading state
-    if (isLoading) {
-        return (
-            <div className="p-6 space-y-6">
-                <div className="flex items-center justify-center h-64">
-                    <div className="flex items-center gap-2">
-                        <Loader2 className="h-6 w-6 animate-spin" />
-                        <span>Đang tải dữ liệu...</span>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-    // Error state
-    if (error) {
-        return (
-            <div className="p-6 space-y-6">
-                <div className="flex items-center justify-center h-64">
-                    <div className="text-center">
-                        <div className="text-red-600 mb-2">
-                            Có lỗi xảy ra khi tải dữ liệu
-                        </div>
-                        <Button onClick={() => window.location.reload()}>
-                            Thử lại
-                        </Button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="p-6 space-y-6">
             {/* Header */}
@@ -379,15 +295,14 @@ export function PackagesManagement() {
                             Tạo gói mới
                         </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
                             <DialogTitle>Tạo gói tập mới</DialogTitle>
                             <DialogDescription>
                                 Tạo gói tập mới cho hệ thống
                             </DialogDescription>
                         </DialogHeader>
-                        <div className="grid gap-6 py-4">
-                            {/* Basic Information */}
+                        <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="name">Tên gói *</Label>
@@ -451,7 +366,6 @@ export function PackagesManagement() {
                                     placeholder="Nhập URL hình ảnh..."
                                 />
                             </div>
-                            {/* Pricing */}
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="grid gap-2">
                                     <Label htmlFor="price">
@@ -494,152 +408,33 @@ export function PackagesManagement() {
                                     />
                                 </div>
                             </div>
-                            {/* Package Type */}
-                            <div className="grid gap-2">
-                                <Label htmlFor="packageType">Loại gói *</Label>
-                                <Select
-                                    value={newPackage.packageType}
-                                    onValueChange={(value) => {
-                                        setNewPackage((prev) => ({
-                                            ...prev,
-                                            packageType: value as
-                                                | "BEGINNER"
-                                                | "INTERMEDIATE"
-                                                | "ADVANCED"
-                                                | "PREMIUM",
-                                        }));
-                                    }}
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Chọn loại gói" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {PACKAGE_TYPES.map((type) => (
-                                            <SelectItem
-                                                key={type.value}
-                                                value={type.value}
-                                            >
-                                                {type.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            {/* Features - Dynamic Input */}
-                            <div className="grid gap-3">
-                                <div className="flex items-center justify-between">
-                                    <Label>Tính năng gói</Label>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() =>
-                                            setNewPackage((prev) => ({
-                                                ...prev,
-                                                featured: [
-                                                    ...prev.featured,
-                                                    "",
-                                                ],
-                                            }))
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="active"
+                                        checked={newPackage.active}
+                                        onCheckedChange={(checked) =>
+                                            setNewPackage({
+                                                ...newPackage,
+                                                active: checked,
+                                            })
                                         }
-                                        className="flex items-center gap-1"
-                                    >
-                                        <Plus className="h-4 w-4" />
-                                        Thêm tính năng
-                                    </Button>
+                                    />
+                                    <Label htmlFor="active">Kích hoạt</Label>
                                 </div>
-                                <div className="space-y-2 max-h-48 overflow-y-auto">
-                                    {newPackage.featured.length === 0 ? (
-                                        <div className="text-sm text-gray-500 text-center py-4 border-2 border-dashed border-gray-200 rounded-lg">
-                                            Chưa có tính năng nào. Nhấn "Thêm
-                                            tính năng" để bắt đầu.
-                                        </div>
-                                    ) : (
-                                        newPackage.featured.map(
-                                            (feature, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex items-center gap-2"
-                                                >
-                                                    <div className="flex-1">
-                                                        <Input
-                                                            value={feature}
-                                                            onChange={(e) => {
-                                                                const updatedFeatures =
-                                                                    [
-                                                                        ...newPackage.featured,
-                                                                    ];
-                                                                updatedFeatures[
-                                                                    index
-                                                                ] =
-                                                                    e.target.value;
-                                                                setNewPackage(
-                                                                    (prev) => ({
-                                                                        ...prev,
-                                                                        featured:
-                                                                            updatedFeatures,
-                                                                    })
-                                                                );
-                                                            }}
-                                                            placeholder={`Tính năng ${
-                                                                index + 1
-                                                            }...`}
-                                                            className="w-full"
-                                                        />
-                                                    </div>
-                                                    <Button
-                                                        type="button"
-                                                        variant="outline"
-                                                        size="sm"
-                                                        onClick={() => {
-                                                            const updatedFeatures =
-                                                                newPackage.featured.filter(
-                                                                    (_, i) =>
-                                                                        i !==
-                                                                        index
-                                                                );
-                                                            setNewPackage(
-                                                                (prev) => ({
-                                                                    ...prev,
-                                                                    featured:
-                                                                        updatedFeatures,
-                                                                })
-                                                            );
-                                                        }}
-                                                        className="flex-shrink-0 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </div>
-                                            )
-                                        )
-                                    )}
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="fixed"
+                                        checked={newPackage.fixed}
+                                        onCheckedChange={(checked) =>
+                                            setNewPackage({
+                                                ...newPackage,
+                                                fixed: checked,
+                                            })
+                                        }
+                                    />
+                                    <Label htmlFor="fixed">Gói cố định</Label>
                                 </div>
-                                {newPackage.featured.length > 0 && (
-                                    <div className="text-sm text-gray-600">
-                                        Tổng cộng:{" "}
-                                        {
-                                            newPackage.featured.filter((f) =>
-                                                f.trim()
-                                            ).length
-                                        }{" "}
-                                        tính năng
-                                    </div>
-                                )}
-                            </div>
-                            {/* Status */}
-                            <div className="flex items-center space-x-2">
-                                <Switch
-                                    id="active"
-                                    checked={newPackage.active}
-                                    onCheckedChange={(checked) =>
-                                        setNewPackage({
-                                            ...newPackage,
-                                            active: checked,
-                                        })
-                                    }
-                                />
-                                <Label htmlFor="active">Kích hoạt gói</Label>
                             </div>
                         </div>
                         <DialogFooter>
@@ -653,12 +448,7 @@ export function PackagesManagement() {
                                 onClick={handleCreatePackage}
                                 disabled={
                                     !newPackage.name.trim() ||
-                                    !newPackage.description.trim() ||
-                                    newPackage.totalDays <= 0 ||
-                                    newPackage.price <= 0 ||
-                                    newPackage.salePrice <= 0 ||
-                                    newPackage.featured.filter((f) => f.trim())
-                                        .length === 0
+                                    !newPackage.description.trim()
                                 }
                             >
                                 Tạo gói
@@ -674,7 +464,9 @@ export function PackagesManagement() {
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-blue-100 rounded-lg">
-                                <div className="h-5 w-5 text-blue-600">📦</div>
+                                <div className="h-5 w-5 text-blue-600">
+                                    Package
+                                </div>
                             </div>
                             <div>
                                 <div className="text-2xl font-bold">
@@ -756,9 +548,7 @@ export function PackagesManagement() {
                         <div className="flex gap-2">
                             <Select
                                 value={statusFilter}
-                                onValueChange={(value) =>
-                                    setStatusFilter(value)
-                                }
+                                onValueChange={setStatusFilter}
                             >
                                 <SelectTrigger className="w-[150px]">
                                     <SelectValue placeholder="Trạng thái" />
@@ -775,21 +565,19 @@ export function PackagesManagement() {
                             </Select>
                             <Select
                                 value={typeFilter}
-                                onValueChange={(value) => setTypeFilter(value)}
+                                onValueChange={setTypeFilter}
                             >
                                 <SelectTrigger className="w-[150px]">
                                     <SelectValue placeholder="Loại gói" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="ALL">Tất cả</SelectItem>
-                                    {PACKAGE_TYPES.map((type) => (
-                                        <SelectItem
-                                            key={type.value}
-                                            value={type.value}
-                                        >
-                                            {type.label}
-                                        </SelectItem>
-                                    ))}
+                                    <SelectItem value="FIXED">
+                                        Cố định
+                                    </SelectItem>
+                                    <SelectItem value="REGULAR">
+                                        Thường
+                                    </SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -817,10 +605,10 @@ export function PackagesManagement() {
                                         Giá
                                     </TableHead>
                                     <TableHead className="font-semibold">
-                                        Loại gói
+                                        Đánh giá
                                     </TableHead>
                                     <TableHead className="font-semibold">
-                                        Tính năng
+                                        Loại
                                     </TableHead>
                                     <TableHead className="font-semibold">
                                         Trạng thái
@@ -844,7 +632,6 @@ export function PackagesManagement() {
                                                             <img
                                                                 src={
                                                                     pkg.imageUrl ||
-                                                                    "/placeholder.svg?height=40&width=40" ||
                                                                     "/placeholder.svg"
                                                                 }
                                                                 alt={pkg.name}
@@ -889,49 +676,30 @@ export function PackagesManagement() {
                                                     </div>
                                                 </TableCell>
                                                 <TableCell>
-                                                    {getPackageTypeBadge(
-                                                        pkg.packageType
+                                                    {pkg.rating ? (
+                                                        <div className="flex items-center gap-1">
+                                                            <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                                                            <span className="font-medium">
+                                                                {pkg.rating.toFixed(
+                                                                    1
+                                                                )}
+                                                            </span>
+                                                            <span className="text-sm text-gray-500">
+                                                                (
+                                                                {
+                                                                    pkg.totalRating
+                                                                }
+                                                                )
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-gray-400">
+                                                            Chưa có đánh giá
+                                                        </span>
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    <div className="max-w-xs">
-                                                        {parseFeatures(
-                                                            pkg.featured
-                                                        ).length > 0 ? (
-                                                            <div className="text-sm">
-                                                                <span className="font-medium">
-                                                                    {
-                                                                        parseFeatures(
-                                                                            pkg.featured
-                                                                        ).length
-                                                                    }{" "}
-                                                                    tính năng
-                                                                </span>
-                                                                <div className="text-gray-500 truncate">
-                                                                    {parseFeatures(
-                                                                        pkg.featured
-                                                                    )
-                                                                        .slice(
-                                                                            0,
-                                                                            2
-                                                                        )
-                                                                        .join(
-                                                                            ", "
-                                                                        )}
-                                                                    {parseFeatures(
-                                                                        pkg.featured
-                                                                    ).length >
-                                                                        2 &&
-                                                                        "..."}
-                                                                </div>
-                                                            </div>
-                                                        ) : (
-                                                            <span className="text-gray-400 text-sm">
-                                                                Không có tính
-                                                                năng
-                                                            </span>
-                                                        )}
-                                                    </div>
+                                                    {getTypeBadge(pkg.fixed)}
                                                 </TableCell>
                                                 <TableCell>
                                                     {getStatusBadge(pkg.active)}
@@ -1060,7 +828,7 @@ export function PackagesManagement() {
                                         >
                                             <div className="flex flex-col items-center gap-2">
                                                 <div className="h-8 w-8 text-gray-400">
-                                                    📦
+                                                    Package
                                                 </div>
                                                 <p className="text-gray-500">
                                                     {searchTerm ||

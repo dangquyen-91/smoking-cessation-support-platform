@@ -1,5 +1,4 @@
 import BaseRequest from "@/app/config/BaseRequest";
-import utils from "@/utils/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useCreateUpdateSmokingStatus = () => {
@@ -24,18 +23,6 @@ export const useGetMockSmokingStatus = (userId: string) => {
         queryKey: ["get-mock-smoking-status", userId],
         queryFn: async () => {
             return await BaseRequest.Get(`/api/smoking-status/${userId}`);
-        },
-    });
-};
-
-export const useGetCurrentSmokingStatus = () => {
-    const userId = utils.getUserId();
-    return useQuery({
-        queryKey: ["get-current-smoking-status", userId],
-        queryFn: async () => {
-            return await BaseRequest.Get(
-                `/api/smoking-status/${userId}/current`
-            );
         },
     });
 };

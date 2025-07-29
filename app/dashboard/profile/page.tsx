@@ -37,17 +37,6 @@ import {
 } from "@/queries/user.query";
 import utils from "@/utils/utils";
 import { useGetMyBlogs } from "@/queries/blog.query";
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { TrainerPage } from "./TrainerPage";
 
 export default function ProfessionalProfile() {
     const userId = utils.getUserId();
@@ -200,7 +189,7 @@ export default function ProfessionalProfile() {
 
                             {/* Profile Info */}
                             <div className="flex-1 pb-6">
-                                <div className="bg-white space-y-2 rounded-lg p-6 shadow-lg">
+                                <div className="bg-white rounded-lg p-6 shadow-lg">
                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                                         <div>
                                             <h1 className="text-3xl font-bold text-gray-900">
@@ -238,38 +227,6 @@ export default function ProfessionalProfile() {
                                                 </p>
                                             )}
                                         </div>
-                                    </div>
-                                    <div>
-                                        <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button>
-                                                    Đăng ký làm huấn luyện viên
-                                                </Button>
-                                            </DialogTrigger>
-                                            <DialogContent className="sm:max-w-[825px]">
-                                                <DialogHeader>
-                                                    <DialogTitle>
-                                                        Đăng ký làm huấn luyện
-                                                        viên
-                                                    </DialogTitle>
-                                                    <DialogDescription>
-                                                        Điền thông tin để đăng
-                                                        ký làm huấn luyện viên
-                                                    </DialogDescription>
-                                                </DialogHeader>
-                                                <TrainerPage />
-                                                <DialogFooter>
-                                                    <DialogClose asChild>
-                                                        <Button variant="outline">
-                                                            Cancel
-                                                        </Button>
-                                                    </DialogClose>
-                                                    <Button type="submit">
-                                                        Save changes
-                                                    </Button>
-                                                </DialogFooter>
-                                            </DialogContent>
-                                        </Dialog>
                                     </div>
                                 </div>
                             </div>

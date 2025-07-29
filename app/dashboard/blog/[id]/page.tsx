@@ -62,7 +62,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
         );
     }
 
-    const tags = blogData.tags?.split(",").map((tag: string) => tag.trim()) || [];
+    const tags = blogData.tags?.split(",").map((tag) => tag.trim()) || [];
 
     return (
         <div className="min-h-screen bg-gradient-to-br ">
@@ -243,7 +243,7 @@ export default function BlogDetailPage({ params }: BlogDetailPageProps) {
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {allBlogPosts.length > 0 &&
-                            allBlogPosts.slice(0, 2).map((item: typeof allBlogPosts[number]) => (
+                            allBlogPosts.slice(0, 2).map((item) => (
                                 <div
                                     key={item.id}
                                     className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"

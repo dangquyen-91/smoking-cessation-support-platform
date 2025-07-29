@@ -16,9 +16,7 @@ import { CoachChat } from "@/components/coach-chat";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 
-import { ReactNode } from "react";
-
-export function DashboardApp({ children }: { children: ReactNode }) {
+export function DashboardApp({ children }) {
     const [activeTab, setActiveTab] = useState("dashboard");
 
     const renderContent = () => {
