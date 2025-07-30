@@ -29,12 +29,16 @@ export default function PlanCalendarPage() {
         isLoading: isPlanLoading,
         isError: isPlanError,
     } = useGetQuitPlanById(planId as string);
+    const [currentMonth, setCurrentMonth] = useState(new Date(2025, 6));
+
+    const year = currentMonth.getFullYear();
+    const month = currentMonth.getMonth() + 1;
 
     const {
         data: processData = [],
         isLoading: isProgressLoading,
         isError: isProgressError,
-    } = useGetQuitPlanProgress(planId as string, 2025, 7);
+    } = useGetQuitPlanProgress(planId as string, year, month);
 
     const {
         data: currentSmokingStatus,
@@ -46,7 +50,6 @@ export default function PlanCalendarPage() {
     const { toast } = useToast();
 
     // 2. Local state for calendar and modal
-    const [currentMonth, setCurrentMonth] = useState(new Date(2025, 6));
     const [selectedDay, setSelectedDay] = useState<any>(null);
     const [inputValue, setInputValue] = useState("");
     const [noteValue, setNoteValue] = useState("");
