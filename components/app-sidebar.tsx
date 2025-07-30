@@ -69,11 +69,11 @@ const communityItems = [
         icon: BookOpen,
         key: "/dashboard/blog",
     },
-    {
-        title: "Forum",
-        icon: MessageSquare,
-        key: "/dashboard/forum",
-    },
+    // {
+    //     title: "Forum",
+    //     icon: MessageSquare,
+    //     key: "/dashboard/forum",
+    // },
 ];
 
 const supportItems = [
