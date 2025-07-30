@@ -172,6 +172,12 @@ export default function PlanCalendarPage() {
 
     const handleInputSubmit = async () => {
         if (!selectedDay || inputValue === "") return;
+        const numSmoked = Number(inputValue);
+
+        if (isNaN(numSmoked) || numSmoked < 0 || numSmoked > 200) {
+            alert("Số lượng thuốc lá phải là một số hợp lệ.");
+            return;
+        }
         const payload = {
             planId: planId as string,
             logDate: selectedDay.date.toISOString().split("T")[0],

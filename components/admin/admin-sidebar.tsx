@@ -69,11 +69,11 @@ const sidebarItems = [
         href: "/admin/withdraw",
         icon: DollarSign,
     },
-    // {
-    //     title: "Cài đặt",
-    //     href: "/admin/settings",
-    //     icon: Settings,
-    // },
+    {
+        title: "Cài đặt",
+        href: "/admin/settings",
+        icon: Settings,
+    },
 ];
 
 interface AdminSidebarProps {

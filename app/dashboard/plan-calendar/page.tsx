@@ -11,11 +11,17 @@ import {
     Play,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useGetQuitPlanByUserId } from "@/queries/plan.query";
+import {
+    useDeleteQuitPlan,
+    useGetQuitPlanByUserId,
+    useUpdateIsDone,
+} from "@/queries/plan.query";
+import { Button } from "@/components/ui/button";
 
 export default function PlanCalendarPage() {
     const [selectedPlan, setSelectedPlan] = useState(null);
     const { data: plansData } = useGetQuitPlanByUserId();
+    const { mutateAsync: updateIsDone } = useUpdateIsDone();
     const today = new Date();
 
     // Calculate progress for each plan
@@ -74,28 +80,37 @@ export default function PlanCalendarPage() {
     };
 
     const getPlanStatusBadge = (plan) => {
-        if (plan.isCompleted) {
+        if (plan.done) {
             return (
                 <span className="px-2 py-1 text-xs bg-green-100 text-green-600 rounded-full">
                     Hoàn thành
                 </span>
             );
-        }
-        if (plan.isActive) {
+        } else
             return (
                 <span className="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded-full">
                     Đang thực hiện
                 </span>
             );
+    };
+
+    const handleStopPlan = async (plan) => {
+        const [err] = await updateIsDone(plan.planId);
+        if (err) {
+            console.error("Error updating plan status:", err);
+            return;
         }
-        if (plan.isUpcoming) {
-            return (
-                <span className="px-2 py-1 text-xs bg-orange-100 text-orange-600 rounded-full">
-                    Sắp bắt đầu
-                </span>
-            );
+        setSelectedPlan(null);
+    };
+    const { mutateAsync: deleteQuitPlan } = useDeleteQuitPlan();
+
+    const handleDeletePlan = async (planId) => {
+        const [err] = await deleteQuitPlan(planId);
+        if (err) {
+            console.error("Error deleting plan:", err);
+            return;
         }
-        return null;
+        setSelectedPlan(null);
     };
 
     const router = useRouter();
@@ -135,18 +150,28 @@ export default function PlanCalendarPage() {
                                                 Kế hoạch #{plan.planId}
                                             </h3>
                                             {getPlanStatusBadge(plan)}
-                                            {plan.planId ===
-                                                currentPlan.planId && (
-                                                <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-600 rounded-full flex items-center gap-1">
-                                                    <Play className="w-3 h-3" />
-                                                    Hiện tại
-                                                </span>
-                                            )}
                                         </div>
                                         <div className="text-sm text-gray-600">
                                             {formatDate(plan.startDate)} -{" "}
                                             {formatDate(plan.endDate)}
                                         </div>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div>
+                                        <Button
+                                            className="bg-red-500 text-white"
+                                            variant="destructive"
+                                            size="sm"
+                                            onClick={() =>
+                                                confirm(
+                                                    "Bạn có chắc chắn muốn xóa kế hoạch này?"
+                                                ) &&
+                                                handleDeletePlan(plan.planId)
+                                            }
+                                        >
+                                            Xóa kế hoạch
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
@@ -206,20 +231,24 @@ export default function PlanCalendarPage() {
 
                 {/* Detail Modal */}
                 {selectedPlan && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[999]">
                         <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                             {/* Modal Header */}
                             <div className="sticky top-0 bg-white border-b border-gray-200 p-6">
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <h3 className="text-xl font-semibold text-gray-800">
-                                            Chi tiết Kế hoạch #
-                                            {selectedPlan.planId}
+                                            Xác nhận dừng kế hoạch cai thuốc của
+                                            bạn?
                                         </h3>
                                         <div className="text-sm text-gray-600 mt-1">
                                             {formatDate(selectedPlan.startDate)}{" "}
                                             - {formatDate(selectedPlan.endDate)}
                                         </div>
+                                        <p className="text-2xl font-bold  mt-1">
+                                            Quá trình này bạn đã hoàn thành
+                                            được:
+                                        </p>
                                     </div>
                                     <button
                                         onClick={() => setSelectedPlan(null)}
@@ -233,7 +262,7 @@ export default function PlanCalendarPage() {
                             {/* Modal Content */}
                             <div className="p-6">
                                 {/* Plan Stats */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                                <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-6">
                                     <div className="text-center p-4 bg-blue-50 rounded-lg">
                                         <div className="text-2xl font-bold text-blue-600">
                                             {selectedPlan.completedMilestones}
@@ -248,24 +277,6 @@ export default function PlanCalendarPage() {
                                         </div>
                                         <div className="text-sm text-gray-600">
                                             Tiến độ
-                                        </div>
-                                    </div>
-                                    <div className="text-center p-4 bg-orange-50 rounded-lg">
-                                        <div className="text-2xl font-bold text-orange-600">
-                                            {selectedPlan.currentMilestone
-                                                ?.targetCigarettes || 0}
-                                        </div>
-                                        <div className="text-sm text-gray-600">
-                                            Mục tiêu hiện tại
-                                        </div>
-                                    </div>
-                                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                                        <div className="text-2xl font-bold text-purple-600">
-                                            {selectedPlan.milestones.length -
-                                                selectedPlan.completedMilestones}
-                                        </div>
-                                        <div className="text-sm text-gray-600">
-                                            Còn lại
                                         </div>
                                     </div>
                                 </div>
@@ -283,83 +294,31 @@ export default function PlanCalendarPage() {
                                 </div>
 
                                 {/* Milestones List */}
-                                <div>
-                                    <h4 className="text-lg font-semibold text-gray-800 mb-4">
-                                        Các mốc chi tiết
-                                    </h4>
-                                    <div className="space-y-3 max-h-80 overflow-y-auto">
-                                        {selectedPlan.milestonesWithDates.map(
-                                            (milestone) => (
-                                                <div
-                                                    key={milestone.stepIndex}
-                                                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                                                >
-                                                    <div className="flex items-center gap-3">
-                                                        <div
-                                                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                                                milestone.isPast
-                                                                    ? "bg-green-100"
-                                                                    : milestone.isToday
-                                                                    ? "bg-blue-100"
-                                                                    : "bg-gray-100"
-                                                            }`}
-                                                        >
-                                                            {milestone.isPast ? (
-                                                                <CheckCircle className="w-4 h-4 text-green-600" />
-                                                            ) : milestone.isToday ? (
-                                                                <Clock className="w-4 h-4 text-blue-600" />
-                                                            ) : (
-                                                                <Target className="w-4 h-4 text-gray-400" />
-                                                            )}
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-gray-800">
-                                                                Bước{" "}
-                                                                {
-                                                                    milestone.stepIndex
-                                                                }
-                                                                {milestone.isToday && (
-                                                                    <span className="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-600 rounded-full">
-                                                                        Hôm nay
-                                                                    </span>
-                                                                )}
-                                                            </div>
-                                                            <div className="text-sm text-gray-600">
-                                                                {formatDate(
-                                                                    milestone.date
-                                                                )}{" "}
-                                                                • Ngày{" "}
-                                                                {
-                                                                    milestone.dayOffset
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="text-right">
-                                                        <div className="text-lg font-bold text-gray-800">
-                                                            {
-                                                                milestone.targetCigarettes
-                                                            }
-                                                        </div>
-                                                        <div className="text-xs text-gray-500">
-                                                            điếu/ngày
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                </div>
                             </div>
 
                             {/* Modal Footer */}
                             <div className="sticky bottom-0 bg-gray-50 border-t border-gray-200 p-4">
-                                <button
-                                    onClick={() => setSelectedPlan(null)}
-                                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                >
-                                    Đóng
-                                </button>
+                                <div className="flex items-center justify-end gap-4">
+                                    <div>
+                                        <Button
+                                            variant="destructive"
+                                            onClick={() =>
+                                                handleStopPlan(selectedPlan)
+                                            }
+                                        >
+                                            Dừng kế hoạch
+                                        </Button>
+                                    </div>
+                                    <div>
+                                        <Button
+                                            onClick={() =>
+                                                setSelectedPlan(null)
+                                            }
+                                        >
+                                            Đóng
+                                        </Button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

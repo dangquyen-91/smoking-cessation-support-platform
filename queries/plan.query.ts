@@ -74,3 +74,33 @@ export const useCreateQuitPlan = () => {
         },
     });
 };
+
+export const useUpdateIsDone = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (planId: any) => {
+            return await BaseRequest.Post(
+                `/api/quit-plans/update-is-done/${planId}`
+            );
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["get-quit-plan-by-user-id"],
+            });
+        },
+    });
+};
+
+export const useDeleteQuitPlan = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (planId: any) => {
+            return await BaseRequest.Delete(`/api/quit-plans/${planId}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["get-quit-plan-by-user-id"],
+            });
+        },
+    });
+};

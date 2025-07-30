@@ -695,7 +695,31 @@ export default function Community() {
                     </Card>
 
                     {/* Quick Actions */}
-                    
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Tham gia ngay</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-2">
+                            <Button
+                                className="w-full bg-transparent"
+                                variant="outline"
+                            >
+                                Tham gia Forum
+                            </Button>
+                            <Button
+                                className="w-full bg-transparent"
+                                variant="outline"
+                            >
+                                Đọc Blog
+                            </Button>
+                            <Button
+                                className="w-full bg-transparent"
+                                variant="outline"
+                            >
+                                Tìm bạn đồng hành
+                            </Button>
+                        </CardContent>
+                    </Card>
                 </div>
             </div>
 

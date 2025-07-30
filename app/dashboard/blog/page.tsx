@@ -793,7 +793,7 @@ export default function BlogPage() {
                     )}
 
                     {/* Newsletter */}
-                    {/* <Card>
+                    <Card>
                         <CardHeader>
                             <CardTitle>Đăng ký nhận tin</CardTitle>
                             <CardDescription>
@@ -809,7 +809,7 @@ export default function BlogPage() {
                                 Đăng ký
                             </Button>
                         </CardContent>
-                    </Card> */}
+                    </Card>
                 </div>
             </div>
         </div>

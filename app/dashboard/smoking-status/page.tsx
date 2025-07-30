@@ -46,7 +46,10 @@ import {
     useGetMockSmokingStatus,
 } from "@/queries/smoking.query";
 import { useToast } from "@/hooks/use-toast";
-import { useCreateQuitPlan } from "@/queries/plan.query";
+import {
+    useCreateQuitPlan,
+    useGetQuitPlanByUserId,
+} from "@/queries/plan.query";
 
 export default function SmokingQuitPlan() {
     const userId = utils.getUserId();
@@ -55,7 +58,7 @@ export default function SmokingQuitPlan() {
     const { mutateAsync: createUpdateSmokingStatus, isPending } =
         useCreateUpdateSmokingStatus();
     const { toast } = useToast();
-
+    const { data: planOfUser } = useGetQuitPlanByUserId();
     // --- SmokingStatus state ---
     const hasExistingData = !!userSmokingHistory?.length;
     const latestData = hasExistingData
@@ -87,6 +90,46 @@ export default function SmokingQuitPlan() {
 
     const handleSaveSmoking = async () => {
         try {
+            const parsedCigs = Number(cigarettesPerDay);
+            const parsedPrice = Number(cigarettePrice);
+            const parsedYears = Number(yearsSmoking);
+            const parsedAttempts = Number(attemptsToQuit || 0);
+            if (isNaN(parsedCigs) || parsedCigs <= 0) {
+                toast({
+                    title: "Lỗi nhập liệu",
+                    description: "Vui lòng nhập số điếu/ngày hợp lệ (> 0).",
+                    variant: "destructive",
+                });
+                return;
+            }
+
+            if (!hasExistingData && (isNaN(parsedYears) || parsedYears <= 0)) {
+                toast({
+                    title: "Lỗi nhập liệu",
+                    description: "Vui lòng nhập số năm hút thuốc hợp lệ (> 0).",
+                    variant: "destructive",
+                });
+                return;
+            }
+
+            if (cigarettePrice && (isNaN(parsedPrice) || parsedPrice <= 0)) {
+                toast({
+                    title: "Lỗi nhập liệu",
+                    description: "Vui lòng nhập giá gói thuốc hợp lệ (> 0).",
+                    variant: "destructive",
+                });
+                return;
+            }
+
+            if (!hasExistingData && attemptsToQuit && parsedAttempts < 0) {
+                toast({
+                    title: "Lỗi nhập liệu",
+                    description: "Số lần cố gắng bỏ không được nhỏ hơn 0.",
+                    variant: "destructive",
+                });
+                return;
+            }
+
             const payload = {
                 userId,
                 cigarettesPerDay: cigarettesPerDay
@@ -208,6 +251,20 @@ export default function SmokingQuitPlan() {
         const { toast } = useToast();
         const handleStartPlan = async () => {
             setIsSubmitting(true);
+
+            // validate
+            if (!customQuitMonths || Number(customQuitMonths) <= 0) {
+                setError("Vui lòng nhập thời gian bỏ thuốc hợp lệ (> 0).");
+                setIsSubmitting(false);
+                return;
+            }
+
+            if (milestones.length === 0) {
+                setError("Vui lòng tạo kế hoạch trước khi bắt đầu.");
+                setIsSubmitting(false);
+                return;
+            }
+
             const payload = {
                 userId: utils.getUserId(),
                 quitMonths: Number.parseFloat(customQuitMonths),
@@ -268,6 +325,7 @@ export default function SmokingQuitPlan() {
                             step="0.1"
                             value={yrs}
                             onChange={(e) => setYrs(e.target.value)}
+                            disabled={hasExistingData}
                         />
                     </div>
                     <div>
@@ -276,6 +334,7 @@ export default function SmokingQuitPlan() {
                             type="number"
                             value={cigs}
                             onChange={(e) => setCigs(e.target.value)}
+                            disabled={hasExistingData}
                         />
                     </div>
                 </div>
@@ -401,6 +460,8 @@ export default function SmokingQuitPlan() {
         );
     };
 
+    const canCreateNewPlan = !planOfUser || planOfUser.find((p) => !p.done);
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
@@ -505,7 +566,8 @@ export default function SmokingQuitPlan() {
                                             className=" bg-green-500 text-white hover:bg-green-700"
                                             disabled={
                                                 !cigarettesPerDay ||
-                                                !yearsSmoking
+                                                !yearsSmoking ||
+                                                canCreateNewPlan
                                             }
                                         >
                                             <Plus className="mr-2 h-4 w-4" />
@@ -544,7 +606,6 @@ export default function SmokingQuitPlan() {
                                     </Label>
                                     <Input
                                         type="number"
-                                        min="0"
                                         value={cigarettesPerDay}
                                         onChange={(e) =>
                                             setCigarettesPerDay(e.target.value)
@@ -588,7 +649,6 @@ export default function SmokingQuitPlan() {
                                     </Label>
                                     <Input
                                         type="number"
-                                        min="0"
                                         value={cigarettePrice}
                                         onChange={(e) =>
                                             setCigarettePrice(e.target.value)
@@ -663,7 +723,6 @@ export default function SmokingQuitPlan() {
                                     </Label>
                                     <Input
                                         type="number"
-                                        min="0"
                                         value={attemptsToQuit}
                                         onChange={(e) =>
                                             setAttemptsToQuit(e.target.value)

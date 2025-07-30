@@ -190,7 +190,12 @@ export default function ProfessionalProfile() {
                                         {user?.fullName?.charAt(0) || "U"}
                                     </AvatarFallback>
                                 </Avatar>
-                                
+                                <Button
+                                    size="sm"
+                                    className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0 bg-white text-gray-600 hover:bg-gray-100 border shadow-md"
+                                >
+                                    <Edit3 className="w-4 h-4" />
+                                </Button>
                             </div>
 
                             {/* Profile Info */}
