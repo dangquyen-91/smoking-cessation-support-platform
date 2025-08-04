@@ -29,7 +29,8 @@ export default function PlanCalendarPage() {
         isLoading: isPlanLoading,
         isError: isPlanError,
     } = useGetQuitPlanById(planId as string);
-    const [currentMonth, setCurrentMonth] = useState(new Date(2025, 6));
+
+    const [currentMonth, setCurrentMonth] = useState(new Date(2025, 7));
 
     const year = currentMonth.getFullYear();
     const month = currentMonth.getMonth() + 1;

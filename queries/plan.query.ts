@@ -28,7 +28,7 @@ export const useGetQuitPlanProgress = (
     month: number
 ) => {
     return useQuery({
-        queryKey: ["get-quit-plan-progress", quitPlanId],
+        queryKey: ["get-quit-plan-progress", quitPlanId, year, month],
         queryFn: async () => {
             return await BaseRequest.Get(
                 `/api/quit-plans/${quitPlanId}/progress?year=${year}&month=${month}`

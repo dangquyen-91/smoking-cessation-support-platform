@@ -169,6 +169,11 @@ export function CoachSidebar({ onToggle }: AdminSidebarProps) {
                                     "flex items-center px-3 py-3 w-full text-left text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200 group",
                                     isCollapsed ? "justify-center" : "space-x-3"
                                 )}
+                                onClick={() => {
+                                    localStorage.removeItem("authToken");
+                                    localStorage.removeItem("userData");
+                                    window.location.href = "/login";
+                                }}
                             >
                                 <LogOut className="h-5 w-5 transition-transform duration-200 group-hover:scale-110 flex-shrink-0" />
                                 {!isCollapsed && (
