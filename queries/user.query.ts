@@ -57,7 +57,10 @@ export const useGetUserById = (id: string) => {
     return useQuery({
         queryKey: ["get-user-by-id", id],
         queryFn: async () => {
-            return await BaseRequest.Get(`/api/users/${id}`);
+            var data = await BaseRequest.Get(`/api/users/${id}`);
+            localStorage.setItem("userData", JSON.stringify(data));
+            console.log("User data fetched:", data);
+            return data;
         },
     });
 };

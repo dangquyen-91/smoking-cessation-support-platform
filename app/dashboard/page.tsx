@@ -74,7 +74,7 @@ export default function DashboardPage() {
             setStats({
                 smokeFreedays: savingData.hoursSaved || 0,
                 moneySaved: savingData.moneySaved || 0,
-                cigarettesAvoided: savingData.cigarettesReduced || 0, // Assuming this should be cigarettesReduced
+                cigarettesAvoided: savingData.cigarettesReduced || 0,
                 healthImprovement: savingData.minutesSaved || 0,
             });
         }

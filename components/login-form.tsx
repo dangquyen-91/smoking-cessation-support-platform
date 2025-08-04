@@ -74,10 +74,22 @@ export function LoginForm({
 
             localStorage.setItem("authToken", data.id);
             localStorage.setItem("userData", JSON.stringify(data));
+            const hasAdminRole = data.roles.some(
+                (role: any) => role.name === "ADMIN"
+            );
+            const hasCoachRole = data.roles.some(
+                (role: any) => role.name === "COACH"
+            );
 
+            if (hasAdminRole) {
+                router.push("/admin");
+            } else if (hasCoachRole) {
+                router.push("/coach");
+            } else {
+                router.push("/dashboard");
+            }
             setIsLoading(false);
             onSuccess(data);
-            router.push("/dashboard");
         } catch (error) {
             setErrors({ api: "Lỗi kết nối máy chủ" });
             setIsLoading(false);
